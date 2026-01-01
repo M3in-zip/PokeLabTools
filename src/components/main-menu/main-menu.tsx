@@ -7,19 +7,28 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
+import { useNavigate } from "@tanstack/react-router";
+import { Button } from "../ui/button";
 
 export const MainMenu = () => {
+  const navigate = useNavigate();
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+          <NavigationMenuLink onClick={() => navigate({ to: "/" })}>Home
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>About</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <NavigationMenuLink href="https://www.google.com">Google</NavigationMenuLink>
+            <NavigationMenuLink onClick={() => navigate({ to: "/about" })}>
+              About
+            </NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  )
-}
+  );
+};
