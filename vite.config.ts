@@ -15,8 +15,10 @@ export default defineConfig({
     tailwindcss()
   ],
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      '@components': path.resolve(__dirname, 'src/components'),
     },
   },
 })

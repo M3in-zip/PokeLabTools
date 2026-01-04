@@ -9,17 +9,20 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { useNavigate } from "@tanstack/react-router";
-import { Button } from "../ui/button";
 
 export const MainMenu = () => {
   const navigate = useNavigate();
+  {/* <NavigationMenuLink onClick={() => navigate({ to: "/" })}>Home</NavigationMenuLink> */}
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink onClick={() => navigate({ to: "/" })}>Home
-          </NavigationMenuLink>
+          <NavigationMenuTrigger>Home</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <NavigationMenuLink onClick={() => navigate({ to: "/" })}>Home</NavigationMenuLink>
+          </NavigationMenuContent>
         </NavigationMenuItem>
+
         <NavigationMenuItem>
           <NavigationMenuTrigger>About</NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -28,7 +31,10 @@ export const MainMenu = () => {
             </NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
       </NavigationMenuList>
     </NavigationMenu>
   );
 };
+
+
