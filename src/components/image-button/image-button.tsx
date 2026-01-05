@@ -8,7 +8,7 @@ interface ImageButtonProps {
 export const ImageButton = ({ buttonImgSrc, onHoverImgSrc, onClick, className }: ImageButtonProps) => {
   return (
     <button onClick={onClick} className={className}>
-        {buttonImgSrc && <img className="h-16 pixel-art" src={buttonImgSrc} />} {/* modify height it will be a fixed value */}
+        {buttonImgSrc && <img className="h-12 pixel-art" src={buttonImgSrc} />} {/* modify height it will be a fixed value */}
     </button>
   );
 };
