@@ -3,9 +3,17 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { MainMenu } from "@/components/main-menu/main-menu";
 import { SidebarMenu } from "@/components/sidebar-menu";
 import { useSidebarStore } from "@stores/sidebar-store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPokemonBaseList } from "@/api/pokemon.ts";
 
 const RootLayout = () => {
   const visible = useSidebarStore((state) => state.visible);
+
+  const { data } = useQuery({
+    queryKey: ['pokemon-base-list'],
+    queryFn: fetchPokemonBaseList,
+    staleTime: Infinity,
+  })
 
   return (
     <div className="flex min-h-screen">

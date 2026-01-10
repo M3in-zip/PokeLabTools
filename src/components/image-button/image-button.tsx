@@ -41,7 +41,7 @@ export const ImageButton = ({
       )}
       {(icon || text) && (
         <span className="relative z-10 flex items-center">
-          {icon && <i className={`${icon} text-[#fde2ab]`}></i>}
+          {icon && <i className={`${icon} text-[#fde2ab] ${text ? "mr-2" : ""}`}></i>}
           {text && <span className="text-[#fde2ab] font-bold">{text}</span>}
         </span>
       )}

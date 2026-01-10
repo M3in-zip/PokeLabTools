@@ -7,7 +7,7 @@ export const MainMenu = () => {
   const toggleSidebar = useSidebarStore((state) => state.toggle);
 
   return (
-    <div className="flex flex-row flex-wrap w-full gap-2 p-2 main-menu-bg">
+    <div className="flex flex-row flex-wrap w-full gap-2 p-2 bg-[#aba59d]">
       <ImageButton
         background="/images/bg-button.png"
         onClick={toggleSidebar}
@@ -22,6 +22,12 @@ export const MainMenu = () => {
         background="/images/bg-button.png"
         onClick={() => navigate({ to: "/about" })}
         text="About"
+      />
+      <ImageButton
+        background="/images/bg-button.png"
+        onClick={() => navigate({ to: "/leaderboard" })}
+        text="Leaderboard"
+        icon="fa-solid fa-trophy"
       />
 
       {/* profile button */}
