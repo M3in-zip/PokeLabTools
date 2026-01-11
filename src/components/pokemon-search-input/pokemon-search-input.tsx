@@ -6,9 +6,13 @@ interface pokemonSearchInputProps {
   defaultValue?: string;
 }
 
-export const PokemonSearchInput = ({ onClick, defaultValue }: pokemonSearchInputProps) => {
+export const PokemonSearchInput = ({
+  onClick,
+  defaultValue,
+}: pokemonSearchInputProps) => {
   const [search, setSearch] = useState(defaultValue || "");
   const [isFocused, setIsFocused] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const pokemonList = usePokemonStore((state) => state.pokemonList);
 
   const displayList = useMemo(() => {
@@ -23,7 +27,8 @@ export const PokemonSearchInput = ({ onClick, defaultValue }: pokemonSearchInput
     <div className="relative w-48 max-w-sm">
       {/* Input di ricerca */}
       <div className="relative flex items-center">
-        <i className="fa-solid fa-search absolute left-3 text-slate-400"></i>{" "} {/* gray icon lens */}
+        <i className="fa-solid fa-search absolute left-3 text-slate-400"></i>{" "}
+        {/* gray icon lens */}
         <input
           type="text"
           value={search}
@@ -32,6 +37,31 @@ export const PokemonSearchInput = ({ onClick, defaultValue }: pokemonSearchInput
           className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-t-lg focus:outline-none bg-white"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onKeyDown={(e) => {
+            if (!displayList.length) return;
+
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setSelectedIndex((prev) => (prev + 1) % displayList.length);
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setSelectedIndex((prev) =>
+                prev <= 0 ? displayList.length - 1 : prev - 1
+              );
+            } else if (e.key === "Enter") {
+              e.preventDefault();
+              if (selectedIndex >= 0 && selectedIndex < displayList.length) {
+                const selectedPokemon = displayList[selectedIndex];
+                setSearch(selectedPokemon.name);
+                onClick?.(selectedPokemon.name);
+                setSelectedIndex(-1);
+                setIsFocused(false);
+                (
+                  e.target as HTMLInputElement
+                ).blur(); /* rimuovi la barra lampeggiante */
+              }
+            }
+          }}
         />
       </div>
 
@@ -42,14 +72,14 @@ export const PokemonSearchInput = ({ onClick, defaultValue }: pokemonSearchInput
                      max-h-[240px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300"
         >
           {displayList.length > 0 ? (
-            displayList.map((pokemon) => (
+            displayList.map((pokemon, index) => (
               <li
                 key={pokemon.id}
-                className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors"
-                onMouseDown={(e) => {
+                className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-200" : "hover:bg-blue-200"}`}
+                onMouseDown={() => {
                   setSearch(pokemon.name);
                   if (onClick) onClick(pokemon.name);
-                  setIsFocused(false); 
+                  setIsFocused(false);
                 }}
               >
                 <span className="text-[10px] font-bold text-slate-400 w-8">
