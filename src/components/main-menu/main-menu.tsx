@@ -17,11 +17,13 @@ export const MainMenu = () => {
         background="/images/bg-button.png"
         onClick={() => navigate({ to: "/" })}
         text="Home"
+        icon="fa-solid fa-house"
       />
       <ImageButton
         background="/images/bg-button.png"
-        onClick={() => navigate({ to: "/about" })}
-        text="About"
+        onClick={() => navigate({ to: "/calculator" })}
+        text="Calculator"
+        icon="fa-solid fa-calculator"
       />
       <ImageButton
         background="/images/bg-button.png"

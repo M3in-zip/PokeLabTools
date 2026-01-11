@@ -7,7 +7,7 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <div className="flex p-2">
-      <img src="/images/player.png" alt="Player Illustration" className="p-2 w-[30%] pixel-art" />
+      Homepagggeeeee
     </div>
   )
 }
