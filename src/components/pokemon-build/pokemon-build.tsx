@@ -9,7 +9,7 @@ interface PokemonBuildProps {
 }
 
 export const PokemonBuild = ({ title }: PokemonBuildProps) => {
-  const [selectedPokemon, setSelectedPokemon] = useState<string>("groudon");
+  const [selectedPokemon, setSelectedPokemon] = useState<string>("rayquaza");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemonData", selectedPokemon],

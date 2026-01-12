@@ -23,6 +23,11 @@ export const PokemonSearchInput = ({
     );
   }, [search, pokemonList]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const sanitized = e.target.value.replace(/[^a-zA-Z]/g, "");
+  setSearch(sanitized);
+};
+
   return (
     <div className="relative w-48 max-w-sm">
       {/* Input di ricerca */}
@@ -32,7 +37,7 @@ export const PokemonSearchInput = ({
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={handleChange}
           placeholder="Search Pokémon..."
           className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-t-lg focus:outline-none bg-white"
           onFocus={() => setIsFocused(true)}
@@ -69,7 +74,7 @@ export const PokemonSearchInput = ({
       {isFocused && (
         <ul
           className="absolute z-10 w-full bg-white border-x border-b border-slate-200 rounded-b-lg shadow-xl 
-                     max-h-[240px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300"
+                     max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300"
         >
           {displayList.length > 0 ? (
             displayList.map((pokemon, index) => (
