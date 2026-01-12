@@ -32,13 +32,13 @@ export const SpriteStats = ({ sprite, stats }: SpriteStatsProps) => {
   };
 
   return (
-    <div className="flex flex-row items-center gap-4 w-[clamp(15rem,50vw,40rem)]">
+    <div className="flex flex-col md:flex-row items-center gap-4 w-full">
       <img
         src={sprite}
         alt="Pokemon sprite"
-        className="h-[clamp(5rem,16vw,15rem)] pixel-art"
+        className="w-[30%] pixel-art"
       />
-      <div className="flex flex-col w-full gap-2">
+      <div className="flex flex-col w-[70%] gap-2">
         {stats.map((stat) => {
           const percentage = (stat.base_stat / 255) * 100;
           const barColor = getStatColor(stat.base_stat);
@@ -49,7 +49,7 @@ export const SpriteStats = ({ sprite, stats }: SpriteStatsProps) => {
               className="flex items-center gap-2 w-full"
             >
               {/* Colonna 1: nome */}
-              <div className="w-[30%] text-right">
+              <div className="w-[30%] text-right breaking-words">
                 {statNameMap[stat.stat.name] || stat.stat.name}:
               </div>
 
