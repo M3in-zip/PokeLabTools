@@ -28,7 +28,7 @@ function PokemonCalculator() {
 
   useEffect(() => {
     if (data) setPokemonList(data);
-    console.log(usePokemonStore.getState().pokemonList);
+    if (data) console.log(usePokemonStore.getState().pokemonList);
   }, [data]);
 
   if (error) return <div className="p-2">Errore nel caricamento</div>;

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { PokemonSearchInput } from "../pokemon-search-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SpriteStats } from "../sprite-stats";
-import { IV_EV } from "@components/iv-ev";
+import { IV_EV, type Stat, type StatValue } from "@components/iv-ev";
 
 interface PokemonBuildProps {
   title?: string;
@@ -10,6 +10,9 @@ interface PokemonBuildProps {
 
 export const PokemonBuild = ({ title }: PokemonBuildProps) => {
   const [selectedPokemon, setSelectedPokemon] = useState<string>("rayquaza");
+  const [baseStats, setBaseStats] = useState<number[]>([105, 150, 90, 150, 90, 95]);
+  const [IVs, setIVs] = useState<Record<Stat, StatValue>>({ HP: 31, Attack: 31, Defense: 31, "Sp. Atk": 31, "Sp. Def": 31, Speed: 31 });
+  const [EVs, setEVs] = useState<Record<Stat, StatValue>>({ HP: 0, Attack: 0, Defense: 0, "Sp. Atk": 0, "Sp. Def": 0, Speed: 0 });
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemonData", selectedPokemon],
@@ -19,9 +22,16 @@ export const PokemonBuild = ({ title }: PokemonBuildProps) => {
       ),
   });
 
+  useEffect(() => {
+    if (data) {
+      const stats = data.stats.map((stat: any) => stat.base_stat);
+      setBaseStats(stats);
+    }
+  }, [data]);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading pokemon data</div>;
-  console.log("data:", data);
+  
 
   return (
     <div className="w-full">
@@ -33,7 +43,7 @@ export const PokemonBuild = ({ title }: PokemonBuildProps) => {
       {data && (
         <SpriteStats sprite={data.sprites.front_default} stats={data.stats} />
       )}
-      {data && <IV_EV />}
+      {data && <IV_EV changeIVs={setIVs} changeEVs={setEVs} IVs={IVs} EVs={EVs} />}
     </div>
   );
 };

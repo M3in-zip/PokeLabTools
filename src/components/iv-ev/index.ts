@@ -1,1 +1,1 @@
-export { IV_EV } from "./iv-ev";
+export { IV_EV, type Stat, type StatValue } from "./iv-ev";

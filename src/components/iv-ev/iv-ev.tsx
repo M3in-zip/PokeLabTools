@@ -1,26 +1,17 @@
 import { useState } from "react";
 
-type Stat = "HP" | "Attack" | "Defense" | "Sp. Atk" | "Sp. Def" | "Speed";
-type StatValue = number | "";
+export type Stat = "HP" | "Attack" | "Defense" | "Sp. Atk" | "Sp. Def" | "Speed";
+export type StatValue = number | "";
 
-export const IV_EV = () => {
-  const [IVs, setIVs] = useState<Record<Stat, StatValue>>({
-    HP: 0,
-    Attack: 0,
-    Defense: 0,
-    "Sp. Atk": 0,
-    "Sp. Def": 0,
-    Speed: 0,
-  });
+interface IVEVProps {
+  changeIVs: (ivs: Record<Stat, StatValue>) => void;
+  changeEVs: (evs: Record<Stat, StatValue>) => void;
+  IVs: Record<Stat, StatValue>;
+  EVs: Record<Stat, StatValue>;
+  onBlur?: () => void;
+}
 
-  const [EVs, setEVs] = useState<Record<Stat, StatValue>>({
-    HP: 0,
-    Attack: 0,
-    Defense: 0,
-    "Sp. Atk": 0,
-    "Sp. Def": 0,
-    Speed: 0,
-  });
+export const IV_EV = ({ changeIVs, changeEVs, IVs, EVs }: IVEVProps) => {
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -32,27 +23,27 @@ export const IV_EV = () => {
     
     if (type === "IV") {
       if (numericValue > 31) nextValue = 31;
-      setIVs((prev) => ({ ...prev, [stat]: nextValue }));
+      changeIVs({ ...IVs, [stat]: nextValue });
     } else {
-      if (numericValue > 252) nextValue = 252;
+      if (numericValue > 252) return;
       const totalEVWithoutCurrent = Object.entries(EVs).reduce(
         (acc, [key, val]) =>
           acc + (key === stat ? 0 : typeof val === "number" ? val : 0),
         0
       );
       const newTotalEV = totalEVWithoutCurrent + numericValue;
-      if (newTotalEV < 509) setEVs((prev) => ({ ...prev, [stat]: nextValue }));
+      if (newTotalEV < 509) changeEVs({ ...EVs, [stat]: nextValue });
     }
   };
 
   const handleBlur = (stat: Stat, type: "IV" | "EV") => {
     if (type === "IV") {
       if (IVs[stat] === "") {
-        setIVs((prev) => ({ ...prev, [stat]: 0 }));
+        changeIVs({ ...IVs, [stat]: 0 });
       }
     } else {
       if (EVs[stat] === "") {
-        setEVs((prev) => ({ ...prev, [stat]: 0 }));
+        changeEVs({ ...EVs, [stat]: 0 });
       }
     }
   };
