@@ -1,7 +1,7 @@
 const baseUrl = "https://pokeapi.co/api/v2";
 
 export const getPokemonBaseList = async () => {
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=2000");
+  const res = await fetch(`${baseUrl}/pokemon?limit=2000`);
   if (!res.ok) {
     throw new Error("Errore nel fetch");
   }
@@ -9,7 +9,7 @@ export const getPokemonBaseList = async () => {
 };
 
 export const getPokemonByName = async (name: string) => {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  const res = await fetch(`${baseUrl}/pokemon/${name}`);
   if (!res.ok) {
     throw new Error("Pokémon non trovato");
   }
