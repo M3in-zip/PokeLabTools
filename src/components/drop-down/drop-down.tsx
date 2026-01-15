@@ -1,14 +1,18 @@
 import { useState } from "react";
 
+interface itemData {
+  value:string,
+  item:React.ReactNode
+}
+
 interface DropDownProps {
   onSelect: (onSelect: string) => void;
   value?: string;
-  dataSource: string[];
+  dataSource: itemData[];
   defaultValue?: string;
-  extraContent?: React.ReactNode[];
 }
 
-export const DropDown = ({ onSelect, value, dataSource, extraContent }: DropDownProps) => {
+export const DropDown = ({ onSelect, value, dataSource }: DropDownProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -39,8 +43,8 @@ export const DropDown = ({ onSelect, value, dataSource, extraContent }: DropDown
             } else if (e.key === "Enter") {
               e.preventDefault();
               if (selectedIndex >= 0 && selectedIndex < dataSource.length) {
-                const selectedPokemon = dataSource[selectedIndex];
-                onSelect?.(selectedPokemon);
+                const selectedValue = dataSource[selectedIndex].value;
+                onSelect?.(selectedValue);
                 setSelectedIndex(-1);
                 setIsFocused(false);
                 (
@@ -61,17 +65,16 @@ export const DropDown = ({ onSelect, value, dataSource, extraContent }: DropDown
           {dataSource.length > 0 ? (
             dataSource.map((item, index) => (
               <li
-                key={item}
+                key={item.value}
                 className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-200" : "hover:bg-blue-200"}`}
                 onMouseDown={() => {
-                  onSelect(item);
+                  onSelect(item.value);
                   setIsFocused(false);
                 }}
               >
                 <span>
-                  {item}
+                  {item.item}
                 </span>
-                {extraContent?extraContent[index]:null}
               </li>
             ))
           ) : (

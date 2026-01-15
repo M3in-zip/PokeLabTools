@@ -34,7 +34,7 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
   const nonNeutralNatures: pokemonNature[] = usePokemonStore((state) =>
     state.getNonNeutralNatures()
   );
-  const baseStatsObj : Record<Stat,number> = {
+  const baseStatsObj: Record<Stat, number> = {
     HP: baseStats[0],
     Atk: baseStats[1],
     Def: baseStats[2],
@@ -42,18 +42,18 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
     "Sp. Def": baseStats[4],
     Speed: baseStats[5],
   };
-  const selectedNatureObj: pokemonNature|undefined = nonNeutralNatures.find(
+  const selectedNatureObj: pokemonNature | undefined = nonNeutralNatures.find(
     (nature) => nature.name === selectedNature
   );
 
-  const finalStats: Record<Stat,number> = {
+  const finalStats: Record<Stat, number> = {
     HP: Math.floor(
       ((2 * baseStatsObj["HP"] +
         (IVs["HP"] ? (IVs["HP"] as number) : 0) +
         (EVs["HP"] ? (EVs["HP"] as number) : 0)) *
         parseInt(level)) /
         100 +
-        parseInt(level)+
+        parseInt(level) +
         10
     ),
     Atk: Math.floor(
@@ -64,7 +64,12 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
           parseInt(level)) /
           100 +
           5
-      )*(selectedNatureObj?.increasedStat=="Atk"? 1.1 : selectedNatureObj?.decreasedStat=="Atk"? 0.9 : 1)
+      ) *
+        (selectedNatureObj?.increasedStat == "Atk"
+          ? 1.1
+          : selectedNatureObj?.decreasedStat == "Atk"
+            ? 0.9
+            : 1)
     ),
     Def: Math.floor(
       Math.floor(
@@ -74,7 +79,12 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
           parseInt(level)) /
           100 +
           5
-      )*(selectedNatureObj?.increasedStat=="Def"? 1.1 : selectedNatureObj?.decreasedStat=="Def"? 0.9 : 1)
+      ) *
+        (selectedNatureObj?.increasedStat == "Def"
+          ? 1.1
+          : selectedNatureObj?.decreasedStat == "Def"
+            ? 0.9
+            : 1)
     ),
     "Sp. Atk": Math.floor(
       Math.floor(
@@ -84,7 +94,12 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
           parseInt(level)) /
           100 +
           5
-      )*(selectedNatureObj?.increasedStat=="Sp. Atk"? 1.1 : selectedNatureObj?.decreasedStat=="Sp. Atk"? 0.9 : 1)
+      ) *
+        (selectedNatureObj?.increasedStat == "Sp. Atk"
+          ? 1.1
+          : selectedNatureObj?.decreasedStat == "Sp. Atk"
+            ? 0.9
+            : 1)
     ),
     "Sp. Def": Math.floor(
       Math.floor(
@@ -94,7 +109,12 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
           parseInt(level)) /
           100 +
           5
-      )*(selectedNatureObj?.increasedStat=="Sp. Def"? 1.1 : selectedNatureObj?.decreasedStat=="Sp. Def"? 0.9 : 1)
+      ) *
+        (selectedNatureObj?.increasedStat == "Sp. Def"
+          ? 1.1
+          : selectedNatureObj?.decreasedStat == "Sp. Def"
+            ? 0.9
+            : 1)
     ),
     Speed: Math.floor(
       Math.floor(
@@ -104,8 +124,13 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
           parseInt(level)) /
           100 +
           5
-      )*(selectedNatureObj?.increasedStat=="Speed"? 1.1 : selectedNatureObj?.decreasedStat=="Speed"? 0.9 : 1)
-    )
+      ) *
+        (selectedNatureObj?.increasedStat == "Speed"
+          ? 1.1
+          : selectedNatureObj?.decreasedStat == "Speed"
+            ? 0.9
+            : 1)
+    ),
   };
 
   const handleChange = (
@@ -169,26 +194,29 @@ export const PokemonStats = ({ baseStats }: IVEVProps) => {
         <DropDown
           onSelect={setSelectedNature}
           value={selectedNature}
-          dataSource={["--", ...nonNeutralNatures.map((n) => n.name)]}
-          extraContent={[
-            <></>,
-            ...nonNeutralNatures.map((n) => (
-              <span className="flex flex-row gap-2 p-2">
-                <span className="text-[#4AF594] font-semibold">
-                  {n.increasedStat}
+          dataSource={[
+            { value: "--", item: <span>--</span> },
+            ...nonNeutralNatures.map((n) => ({
+              value: n.name,
+              item: (
+                <span className="flex flex-row gap-2 p-2">
+                  <span className="font-semibold">{n.name}</span>
+                  <span className="text-[#4AF594] font-semibold">
+                    {n.increasedStat}
+                  </span>
+                  <span className="text-[#F91A34] font-semibold">
+                    {n.decreasedStat}
+                  </span>
                 </span>
-                <span className="text-[#F91A34] font-semibold">
-                  {n.decreasedStat}
-                </span>
-              </span>
-            )),
+              ),
+            })),
           ]}
         />
         <label className="font-semibold">LEVEL : </label>
         <DropDown
           onSelect={setLevel}
           value={level}
-          dataSource={["50", "100"]}
+          dataSource={[{value:"50", item:<span>50</span>}, {value:"100", item:<span>100</span>}]}
         />
       </div>
       <div className="grid grid-cols-4 gap-2">
