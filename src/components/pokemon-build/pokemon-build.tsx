@@ -5,6 +5,7 @@ import { PokemonInfo } from "../pokemon-info";
 import { PokemonStats } from "@/components/pokemon-stats";
 import { FullPageSpinner } from "../full-page-spinner";
 import { MoveList } from "../move-list";
+import { PokemonMoveSearch } from "../pokemon-move-search";
 
 interface PokemonBuildProps {
   title?: string;
@@ -45,7 +46,7 @@ export const PokemonBuild = ({ title }: PokemonBuildProps) => {
         <PokemonInfo sprite={data.sprites.front_default} stats={data.stats} />
       )}
       {data && <PokemonStats baseStats={baseStats}/>}
-      {data && moves.length > 0 && <MoveList moves={moves}></MoveList>}
+      {data && moves.length > 0 && <PokemonMoveSearch moves={moves}></PokemonMoveSearch>}
       {isLoading && <FullPageSpinner />}
     </div>
   );

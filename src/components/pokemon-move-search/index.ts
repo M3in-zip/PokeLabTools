@@ -1,0 +1,1 @@
+export { PokemonMoveSearch } from "./pokemon-move-search";
