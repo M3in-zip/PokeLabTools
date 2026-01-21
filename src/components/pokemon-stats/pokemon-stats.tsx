@@ -51,7 +51,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
       HP: Math.floor(
         ((2 * baseStatsObj["HP"] +
           (IVs["HP"] ? (IVs["HP"] as number) : 0) +
-          (EVs["HP"] ? (EVs["HP"] as number) : 0)) *
+          ((EVs["HP"] ? (EVs["HP"] as number) : 0)/4)) *
           parseInt(level)) /
           100 +
           parseInt(level) +
@@ -61,7 +61,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         Math.floor(
           ((2 * baseStatsObj["Atk"] +
             (IVs["Atk"] ? (IVs["Atk"] as number) : 0) +
-            (EVs["Atk"] ? (EVs["Atk"] as number) : 0)) *
+            ((EVs["Atk"] ? (EVs["Atk"] as number) : 0)/4)) *
             parseInt(level)) /
             100 +
             5,
@@ -76,7 +76,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         Math.floor(
           ((2 * baseStatsObj["Def"] +
             (IVs["Def"] ? (IVs["Def"] as number) : 0) +
-            (EVs["Def"] ? (EVs["Def"] as number) : 0)) *
+            ((EVs["Def"] ? (EVs["Def"] as number) : 0)/4)) *
             parseInt(level)) /
             100 +
             5,
@@ -91,7 +91,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         Math.floor(
           ((2 * baseStatsObj["Sp. Atk"] +
             (IVs["Sp. Atk"] ? (IVs["Sp. Atk"] as number) : 0) +
-            (EVs["Sp. Atk"] ? (EVs["Sp. Atk"] as number) : 0)) *
+            ((EVs["Sp. Atk"] ? (EVs["Sp. Atk"] as number) : 0)/4)) *
             parseInt(level)) /
             100 +
             5,
@@ -106,7 +106,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         Math.floor(
           ((2 * baseStatsObj["Sp. Def"] +
             (IVs["Sp. Def"] ? (IVs["Sp. Def"] as number) : 0) +
-            (EVs["Sp. Def"] ? (EVs["Sp. Def"] as number) : 0)) *
+            ((EVs["Sp. Def"] ? (EVs["Sp. Def"] as number) : 0)/4)) *
             parseInt(level)) /
             100 +
             5,
@@ -121,7 +121,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         Math.floor(
           ((2 * baseStatsObj["Speed"] +
             (IVs["Speed"] ? (IVs["Speed"] as number) : 0) +
-            (EVs["Speed"] ? (EVs["Speed"] as number) : 0)) *
+            ((EVs["Speed"] ? (EVs["Speed"] as number) : 0)/4)) *
             parseInt(level)) /
             100 +
             5,

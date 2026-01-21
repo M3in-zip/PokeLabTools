@@ -15,7 +15,7 @@ export const ModifiersCard = ({
         <div className="flex flex-row items-center, justify-content">
       <button
         type="button"
-        className={`p-2 rounded-l-lg ${firstButton} border-white border-2`}
+        className={`p-2 rounded-l-lg ${firstButton} border-white border-2 border-r-1`}
         onClick={
           () =>
             firstButton === "bg-gray-200"
@@ -27,7 +27,7 @@ export const ModifiersCard = ({
       >
         ciaooo
       </button>
-      <button className={`p-2 rounded-r-lg ${firstButton} border-white border-2`}>second</button>
+      <button className={`p-2 rounded-r-lg ${firstButton} border-white border-2 border-l-1`}>second</button>
         </div>
     </div>
   );
