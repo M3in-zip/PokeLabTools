@@ -3,15 +3,16 @@ import { PokemonSearchInput } from "../pokemon-search-input";
 import { useEffect, useState } from "react";
 import { PokemonInfo } from "../pokemon-info";
 import { PokemonStats } from "@/components/pokemon-stats";
-import { FullPageSpinner } from "../full-page-spinner";
+import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 
 interface PokemonBuildProps {
+  pokemon?: string;
   setPokemonData: (data: {stats: number[], move: string}) => void;
 }
 
-export const PokemonBuild = ({ setPokemonData }: PokemonBuildProps) => {
-  const [selectedPokemon, setSelectedPokemon] = useState<string>("rayquaza");
+export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => {
+  const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
   const [baseStats, setBaseStats] = useState<number[]>([105, 150, 90, 150, 90, 95]);
   const [moves, setMoves] = useState<string[]>([])
 
@@ -41,7 +42,7 @@ export const PokemonBuild = ({ setPokemonData }: PokemonBuildProps) => {
   }, [data]);
 
   return (
-    <div className="w-full text-xs">
+    <div className="relative w-full h-full text-xs">
       <PokemonSearchInput
         defaultValue={selectedPokemon}
         onClick={setSelectedPokemon}
@@ -51,7 +52,7 @@ export const PokemonBuild = ({ setPokemonData }: PokemonBuildProps) => {
       )}
       {data && <PokemonStats baseStats={baseStats} onChange={setStats}/>}
       {data && moves.length > 0 && <PokemonMoveSearch moves={moves} onClick={setSelectedMove}></PokemonMoveSearch>}
-      {isLoading && <FullPageSpinner />}
+      {isLoading && <Spinner />}
     </div>
   );
 };

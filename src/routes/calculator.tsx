@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getPokemonBaseList } from "@/api/pokemon.ts";
 import { usePokemonStore } from "@/stores/pokemonStore";
-import { FullPageSpinner } from "@/components/full-page-spinner";
+import { Spinner } from "@/components/spinner";
 import { PokemonBuild } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 
@@ -41,14 +41,14 @@ function PokemonCalculator() {
   if (errorPokemonList) return <div className="p-2">Errore nel caricamento</div>;
 
   return (
-    <div className="p-2 w-full flex flex-row gap-2 justify-between">
-      {loadingPokemonList && <FullPageSpinner />}
-      <div className="lg:w-[30%]">
-        <PokemonBuild setPokemonData={setDataPokemon1}/>
+    <div className="relative p-2 w-full flex flex-row gap-2 justify-between">
+      {/* {loadingPokemonList && <Spinner />} */}
+      <div className="lg:w-[30%] lg:min-h-[400px]">
+        <PokemonBuild pokemon="kyogre" setPokemonData={setDataPokemon1}/>
       </div>
       <ModifiersCard />
       <div className="lg:w-[30%]">
-        <PokemonBuild setPokemonData={setDataPokemon2}/>
+        <PokemonBuild pokemon="groudon" setPokemonData={setDataPokemon2}/>
       </div>
     </div>
   );
