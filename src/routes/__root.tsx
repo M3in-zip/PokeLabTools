@@ -2,9 +2,15 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { MainMenu } from "@/components/main-menu/main-menu";
 import { useSidebarStore } from "@stores/sidebar-store";
+import { useThemeStore } from "@stores/theme-store";
+import { useEffect } from "react";
 
 const RootLayout = () => {
   const visible = useSidebarStore((state) => state.visible);
+  const detectTheme = useThemeStore((state) => state.detectTheme);
+  useEffect(() => {
+    detectTheme();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen w-screen overflow-x-auto">

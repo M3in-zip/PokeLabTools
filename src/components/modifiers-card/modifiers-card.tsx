@@ -25,7 +25,7 @@ export const ModifiersCard = ({
                 ) /* setModifiers({...modifiers, example: "value"}) */
         }
       >
-        ciaooo
+        first
       </button>
       <button className={`p-2 rounded-r-lg ${firstButton} border-white border-2 border-l-1`}>second</button>
         </div>

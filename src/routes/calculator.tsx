@@ -43,9 +43,13 @@ function PokemonCalculator() {
   return (
     <div className="p-2 w-full flex flex-row gap-2 justify-between">
       {loadingPokemonList && <FullPageSpinner />}
-      <PokemonBuild setPokemonData={setDataPokemon1}/>
+      <div className="lg:w-[30%]">
+        <PokemonBuild setPokemonData={setDataPokemon1}/>
+      </div>
       <ModifiersCard />
-      <PokemonBuild setPokemonData={setDataPokemon2}/>
+      <div className="lg:w-[30%]">
+        <PokemonBuild setPokemonData={setDataPokemon2}/>
+      </div>
     </div>
   );
 }

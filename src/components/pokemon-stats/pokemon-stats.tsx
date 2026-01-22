@@ -180,17 +180,14 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         }))
       }
       dataSource={Array.from({ length: 13 }, (_, i) => {
-        // Invertiamo l'ordine: partiamo da 6 e scendiamo a -6
-        const v = 6 - i; 
-        
-        // Formattiamo l'etichetta con il + se il numero è maggiore di 0
+        const v = 6 - i;
         const label = v > 0 ? `+${v}` : v.toString();
-        
         return { 
           value: v, 
           item: <span className="font-medium">{label}</span> 
         };
       })}
+      bgRemove
     />
   );
 };
@@ -239,7 +236,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         </span>
         <span className="font-semibold uppercase text-xs">IV</span>
         <span className="font-semibold uppercase text-xs">EV</span>
-        <span className="font-semibold uppercase text-xs">Change</span>
+        <span className="font-semibold uppercase text-xs">Stage</span>
         {STAT_NAMES.map((stat) => (
           <Fragment key={stat}>
             {/* stat name */}
