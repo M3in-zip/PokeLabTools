@@ -1,34 +1,40 @@
 import { useState } from "react";
 
 interface ModifiersCardProps {
-  setModifiers?: (modifiers: any) => void;
-  modifiers?: any;
+  setModifiers: (modifiers: any) => void;
+  modifiers: any;
 }
 
 export const ModifiersCard = ({
   setModifiers,
   modifiers,
 }: ModifiersCardProps) => {
-  const [firstButton, setFirstButton] = useState("bg-gray-200");
-  return (
-    <div>
-        <div className="flex flex-row items-center, justify-content">
+
+  const leftButtonClasses = "p-2 border-white border-2 border-r-1 rounded-l-lg";
+  const rightButtonClasses = "p-2 border-white border-2 border-l-1 rounded-r-lg";
+  const middleButtonClasses = "p-2 border-white border-2 border-l-1 border-r-1";
+
+  const buttonCustom = (className: string, name: string, modifier: string) => {
+    return(
       <button
         type="button"
-        className={`p-2 rounded-l-lg ${firstButton} border-white border-2 border-r-1`}
-        onClick={
-          () =>
-            firstButton === "bg-gray-200"
-              ? setFirstButton("bg-gray-500")
-              : setFirstButton(
-                  "bg-gray-200",
-                ) /* setModifiers({...modifiers, example: "value"}) */
-        }
+        className={`${className} ${modifiers[modifier] === name ? "bg-yellow-500" : "bg-gray-200"}`}
+        onClick={() => {
+          setModifiers({ ...modifiers, [modifier]: name });
+        }}
       >
-        first
+        {name.toUpperCase()}
       </button>
-      <button className={`p-2 rounded-r-lg ${firstButton} border-white border-2 border-l-1`}>second</button>
-        </div>
+    )
+  };
+
+  return (
+    <div>
+      <div className="flex flex-row items-center, justify-content">
+        {buttonCustom(leftButtonClasses, "sun", "weather")}
+        {buttonCustom(middleButtonClasses, "rain", "weather")}
+        {buttonCustom(rightButtonClasses, "sand", "weather")}
+      </div>
     </div>
   );
 };

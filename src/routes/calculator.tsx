@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getPokemonBaseList } from "@/api/pokemon.ts";
 import { usePokemonStore } from "@/stores/pokemonStore";
-import { Spinner } from "@/components/spinner";
 import { PokemonBuild } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 
@@ -15,6 +14,7 @@ function PokemonCalculator() {
   const setPokemonList = usePokemonStore((state) => state.setPokemonList);
   const [dataPokemon1, setDataPokemon1] = useState({stats: [1,1,1,1,1,1], move: ""});
   const [dataPokemon2, setDataPokemon2] = useState({stats: [1,1,1,1,1,1], move: ""});
+  const [modifiers, setModifiers] = useState({weather: "sun"});
 
   useEffect(() => {
     console.log("Pokemon 1 data changed: ", dataPokemon1, "Pokemon 2 data: ", dataPokemon2);
@@ -46,7 +46,7 @@ function PokemonCalculator() {
       <div className="lg:w-[30%] lg:min-h-[400px]">
         <PokemonBuild pokemon="kyogre" setPokemonData={setDataPokemon1}/>
       </div>
-      <ModifiersCard />
+      <ModifiersCard modifiers={modifiers} setModifiers={setModifiers}/>
       <div className="lg:w-[30%]">
         <PokemonBuild pokemon="groudon" setPokemonData={setDataPokemon2}/>
       </div>
