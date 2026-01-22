@@ -41,7 +41,7 @@ export const PokemonBuild = ({ setPokemonData }: PokemonBuildProps) => {
   }, [data]);
 
   return (
-    <div className="min-w-[180px] text-xs">
+    <div className="w-full text-xs">
       <PokemonSearchInput
         defaultValue={selectedPokemon}
         onClick={setSelectedPokemon}

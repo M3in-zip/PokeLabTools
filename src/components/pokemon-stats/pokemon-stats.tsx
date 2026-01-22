@@ -188,6 +188,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
     value: StatValue,
     stat: Stat,
     type: "IV" | "EV",
+    step?: number,
   ) => (
     <input
       className={inputClassName}
@@ -197,6 +198,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
       value={value}
       onChange={(e) => handleChange(e, stat, type)}
       onBlur={() => handleBlur(stat, type)}
+      step={step || 1}
     />
   );
 
@@ -236,34 +238,34 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
         />
       </div>
       <div className="grid grid-cols-4 gap-2">
-        <label className="font-semibold">STAT</label>
-        <label></label>
-        <label className="font-semibold">IV (0-31)</label>
-        <label className="font-semibold">EV (0-252)</label>
-        <label>HP : </label>
-        <label>{finalStats["HP"]}</label>
+        <span className="font-semibold">STAT</span>
+        <span></span>
+        <span className="font-semibold">IV (0-31)</span>
+        <span className="font-semibold">EV (0-252)</span>
+        <span className="whitespace-nowrap">HP : </span>
+        <span>{finalStats["HP"]}</span>
         {customInput(0, 31, IVs.HP, "HP", "IV")}
-        {customInput(0, 252, EVs.HP, "HP", "EV")}
-        <label>Attack : </label>
-        <label>{finalStats["Atk"]}</label>
+        {customInput(0, 252, EVs.HP, "HP", "EV", 4)}
+        <span className="whitespace-nowrap">Attack : </span>
+        <span>{finalStats["Atk"]}</span>
         {customInput(0, 31, IVs.Atk, "Atk", "IV")}
-        {customInput(0, 252, EVs.Atk, "Atk", "EV")}
-        <label>Defense : </label>
-        <label>{finalStats["Def"]}</label>
+        {customInput(0, 252, EVs.Atk, "Atk", "EV", 4)}
+        <span className="whitespace-nowrap">Defense : </span>
+        <span>{finalStats["Def"]}</span>
         {customInput(0, 31, IVs.Def, "Def", "IV")}
-        {customInput(0, 252, EVs.Def, "Def", "EV")}
-        <label>Sp. Atk : </label>
-        <label>{finalStats["Sp. Atk"]}</label>
+        {customInput(0, 252, EVs.Def, "Def", "EV", 4)}
+        <span className="whitespace-nowrap">Sp. Atk : </span>
+        <span>{finalStats["Sp. Atk"]}</span>
         {customInput(0, 31, IVs["Sp. Atk"], "Sp. Atk", "IV")}
-        {customInput(0, 252, EVs["Sp. Atk"], "Sp. Atk", "EV")}
-        <label>Sp. Def : </label>
-        <label>{finalStats["Sp. Def"]}</label>
+        {customInput(0, 252, EVs["Sp. Atk"], "Sp. Atk", "EV", 4)}
+        <span className="whitespace-nowrap">Sp. Def : </span>
+        <span>{finalStats["Sp. Def"]}</span>
         {customInput(0, 31, IVs["Sp. Def"], "Sp. Def", "IV")}
-        {customInput(0, 252, EVs["Sp. Def"], "Sp. Def", "EV")}
-        <label>Speed : </label>
-        <label>{finalStats["Speed"]}</label>
+        {customInput(0, 252, EVs["Sp. Def"], "Sp. Def", "EV", 4)}
+        <span className="whitespace-nowrap">Speed : </span>
+        <span>{finalStats["Speed"]}</span>
         {customInput(0, 31, IVs.Speed, "Speed", "IV")}
-        {customInput(0, 252, EVs.Speed, "Speed", "EV")}
+        {customInput(0, 252, EVs.Speed, "Speed", "EV", 4)}
       </div>
     </div>
   );
