@@ -75,8 +75,8 @@ export const PokemonSearchInput = ({
       {/* autocomplete list */}
       {isFocused && (
         <ul
-          className="absolute z-10 w-full bg-white border-x border-b border-slate-200 rounded-b-lg shadow-xl 
-                     max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300"
+          className={`absolute z-10 w-full ${theme === "dark" ? "bg-slate-500 text-white" : "bg-white text-black"} border-x border-b border-slate-200 rounded-b-lg shadow-xl 
+                     max-h-44 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300`}
         >
           {displayList.length > 0 ? (
             displayList.map((pokemon, index) => (
@@ -89,16 +89,16 @@ export const PokemonSearchInput = ({
                   setIsFocused(false);
                 }}
               >
-                <span className="text-[10px] font-bold text-slate-400 w-8">
+                <span className="text-[10px] text-slate-300 font-bold w-8 mr-2">
                   #{pokemon.id}
                 </span>
-                <span className="capitalize text-slate-700 font-medium">
+                <span className="capitalize font-medium">
                   {pokemon.name}
                 </span>
               </li>
             ))
           ) : (
-            <li className="px-4 py-8 text-center text-slate-400 text-sm">
+            <li className="px-4 py-8 text-center text-sm">
               Nessun Pokémon trovato
             </li>
           )}

@@ -72,57 +72,57 @@
 
 /* type cards color */
 .bug-card {
-  background-color: color-mix(in oklab, #8fbf2b 30%, transparent);
+  background-color: color-mix(in oklab, #8fbf2b 40%, transparent);
 }
 .dark-card {
-  background-color: color-mix(in oklab, #5b5265 30%, transparent);
+  background-color: color-mix(in oklab, #5b5265 40%, transparent);
 }
 .dragon-card {
-  background-color: color-mix(in oklab, #096dc3 30%, transparent);
+  background-color: color-mix(in oklab, #096dc3 40%, transparent);
 }
 .electric-card {
-  background-color: color-mix(in oklab, #f4d23b 30%, transparent);
+  background-color: color-mix(in oklab, #f4d23b 40%, transparent);
 }
 .fairy-card {
-  background-color: color-mix(in oklab, #ec90e7 30%, transparent);
+  background-color: color-mix(in oklab, #ec90e7 40%, transparent);
 }
 .fighting-card {
-  background-color: color-mix(in oklab, #ce3f6b 30%, transparent);
+  background-color: color-mix(in oklab, #ce3f6b 40%, transparent);
 }
 .fire-card {
-  background-color: color-mix(in oklab, #fe9c55 30%, transparent);
+  background-color: color-mix(in oklab, #fe9c55 40%, transparent);
 }
 .flying-card {
-  background-color: color-mix(in oklab, #8fa8de 30%, transparent);
+  background-color: color-mix(in oklab, #8fa8de 40%, transparent);
 }
 .ghost-card {
-  background-color: color-mix(in oklab, #5269ad 30%, transparent);
+  background-color: color-mix(in oklab, #5269ad 40%, transparent);
 }
 .grass-card {
-  background-color: color-mix(in oklab, #65bc5e 30%, transparent);
+  background-color: color-mix(in oklab, #65bc5e 40%, transparent);
 }
 .ground-card {
-  background-color: color-mix(in oklab, #d97746 30%, transparent);
+  background-color: color-mix(in oklab, #d97746 40%, transparent);
 }
 .ice-card {
-  background-color: color-mix(in oklab, #73cebf 30%, transparent);
+  background-color: color-mix(in oklab, #73cebf 40%, transparent);
 }
 .normal-card {
-  background-color: color-mix(in oklab, #9099a2 30%, transparent);
+  background-color: color-mix(in oklab, #9099a2 40%, transparent);
 }
 .poison-card {
-  background-color: color-mix(in oklab, #ab6ac8 30%, transparent);
+  background-color: color-mix(in oklab, #ab6ac8 40%, transparent);
 }
 .psychic-card {
-  background-color: color-mix(in oklab, #f97077 30%, transparent);
+  background-color: color-mix(in oklab, #f97077 40%, transparent);
 }
 .rock-card {
-  background-color: color-mix(in oklab, #c9b68b 30%, transparent);
+  background-color: color-mix(in oklab, #c9b68b 40%, transparent);
 }
 .steel-card {
-  background-color: color-mix(in oklab, #5b8ea1 30%, transparent);
+  background-color: color-mix(in oklab, #5b8ea1 40%, transparent);
 }
 .water-card {
-  background-color: color-mix(in oklab, #4d90d6 30%, transparent);
+  background-color: color-mix(in oklab, #4d90d6 40%, transparent);
 }
 

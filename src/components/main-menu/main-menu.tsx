@@ -38,7 +38,7 @@ export const MainMenu = () => {
         {/* profilg-button */}
         <ImageButton
           background="/images/bg-grass.png"
-          onClick={() => console.log("Profile clicked")}
+          onClick={() => null}
           className="ml-auto"
           icon="fa-solid fa-user"
         />

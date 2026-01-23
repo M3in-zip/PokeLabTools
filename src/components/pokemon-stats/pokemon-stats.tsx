@@ -7,19 +7,19 @@ export type Stat = "HP" | "Atk" | "Def" | "Sp. Atk" | "Sp. Def" | "Speed";
 const STAT_NAMES = ["HP", "Atk", "Def", "Sp. Atk", "Sp. Def", "Speed"] as const;
 export type StatValue = number | "";
 export const STAT_STAGE_MODIFIERS: Record<number, number> = {
-  [-6]: (2 / 8), // 0.25
-  [-5]: (2 / 7), // ~0.285
-  [-4]: (2 / 6), // ~0.333
-  [-3]: (2 / 5), // 0.4
-  [-2]: (2 / 4), // 0.5
-  [-1]: (2 / 3), // ~0.666
-  [0]: 1.0,    // Neutro
-  [1]: (3 / 2),  // 1.5
-  [2]: (4 / 2),  // 2.0
-  [3]: (5 / 2),  // 2.5
-  [4]: (6 / 2),  // 3.0
-  [5]: (7 / 2),  // 3.5
-  [6]: (8 / 2),  // 4.0
+  [-6]: 2 / 8, // 0.25
+  [-5]: 2 / 7, // ~0.285
+  [-4]: 2 / 6, // ~0.333
+  [-3]: 2 / 5, // 0.4
+  [-2]: 2 / 4, // 0.5
+  [-1]: 2 / 3, // ~0.666
+  [0]: 1.0, // Neutro
+  [1]: 3 / 2, // 1.5
+  [2]: 4 / 2, // 2.0
+  [3]: 5 / 2, // 2.5
+  [4]: 6 / 2, // 3.0
+  [5]: 7 / 2, // 3.5
+  [6]: 8 / 2, // 4.0
 } as const;
 
 interface IVEVProps {
@@ -169,31 +169,49 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   );
 
   const statChangesDropdown = (stat: Stat) => {
-  return (
-    <DropDown
-      value={statChanges[stat] as number > 0 ? `+${statChanges[stat]}` : statChanges[stat]}
-      defaultValue={0}
-      onSelect={(val) =>
-        setStatChanges((prev) => ({
-          ...prev,
-          [stat]: val,
-        }))
-      }
-      dataSource={Array.from({ length: 13 }, (_, i) => {
-        const v = 6 - i;
-        const label = v > 0 ? `+${v}` : v.toString();
-        return { 
-          value: v, 
-          item: <span className="font-medium">{label}</span> 
-        };
-      })}
-      bgRemove
-    />
-  );
-};
+    return (
+      <DropDown
+        value={
+          (statChanges[stat] as number) > 0
+            ? `+${statChanges[stat]}`
+            : statChanges[stat]
+        }
+        defaultValue={0}
+        onSelect={(val) =>
+          setStatChanges((prev) => ({
+            ...prev,
+            [stat]: val,
+          }))
+        }
+        dataSource={Array.from({ length: 13 }, (_, i) => {
+          const v = 6 - i;
+          const label = v > 0 ? `+${v}` : v.toString();
+          return {
+            value: v,
+            item: <span className="font-medium">{label}</span>,
+          };
+        })}
+      />
+    );
+  };
 
   return (
     <div className="p-2">
+
+      {/* level */}
+      <div className="flex flex-row items-center gap-2 mb-2">
+        <span className="font-semibold whitespace-nowrap">LEVEL : </span>
+        <DropDown
+          onSelect={setLevel}
+          value={level}
+          dataSource={[
+            { value: 50, item: <span>50</span> },
+            { value: 100, item: <span>100</span> },
+          ]}
+        />
+      </div>
+
+      {/* nature */}
       <div className="flex flex-row items-center gap-2 mb-2">
         <span className="font-semibold whitespace-nowrap">NATURE : </span>
         <DropDown
@@ -217,16 +235,9 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
             })),
           ]}
         />
-        <span className="font-semibold whitespace-nowrap">LEVEL : </span>
-        <DropDown
-          onSelect={setLevel}
-          value={level}
-          dataSource={[
-            { value: 50, item: <span>50</span> },
-            { value: 100, item: <span>100</span> },
-          ]}
-        />
       </div>
+
+      {/* stats grid */}
       <div className="grid grid-cols-5 gap-2 items-center justify-items-center">
         <span className="font-semibold justify-self-start uppercase text-xs">
           Stat

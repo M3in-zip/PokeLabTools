@@ -96,7 +96,7 @@ export const DropDown = ({
       {isFocused && (
         <ul
           ref={listRef}
-          className={`absolute top-full border border-slate-200 rounded-lg shadow-xl
+          className={`absolute top-full border border-slate-200 rounded-l-lg shadow-xl
              max-h-[20vh] overflow-auto whitespace-nowrap z-10 w-auto ${
                bgRemove
                  ? "bg-white"

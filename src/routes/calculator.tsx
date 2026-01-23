@@ -12,8 +12,8 @@ export const Route = createFileRoute("/calculator")({
 
 function PokemonCalculator() {
   const setPokemonList = usePokemonStore((state) => state.setPokemonList);
-  const [dataPokemon1, setDataPokemon1] = useState({stats: [1,1,1,1,1,1], move: ""});
-  const [dataPokemon2, setDataPokemon2] = useState({stats: [1,1,1,1,1,1], move: ""});
+  const [dataPokemon1, setDataPokemon1] = useState({stats: [1,1,1,1,1,1], move: "origin-pulse"});
+  const [dataPokemon2, setDataPokemon2] = useState({stats: [1,1,1,1,1,1], move: "precipice-blades"});
   const [modifiers, setModifiers] = useState({weather: "sun", terrain: "grassy"});
 
   useEffect(() => {
@@ -35,7 +35,6 @@ function PokemonCalculator() {
 
   useEffect(() => {
     if (pokemonList) setPokemonList(pokemonList);
-    if (pokemonList) console.log(usePokemonStore.getState().pokemonList);
   }, [pokemonList, setPokemonList]);
 
   if (errorPokemonList) return <div className="p-2">Errore nel caricamento</div>;
@@ -43,11 +42,11 @@ function PokemonCalculator() {
   return (
     <div className="relative p-2 w-full flex flex-row gap-2 justify-between">
       <div className="lg:w-[30%] lg:min-h-[400px]">
-        <PokemonBuild pokemon="kyogre" setPokemonData={setDataPokemon1}/>
+        <PokemonBuild pokemon="kyogre" move="origin-pulse" setPokemonData={setDataPokemon1}/>
       </div>
       <ModifiersCard modifiers={modifiers} setModifiers={setModifiers}/>
       <div className="lg:w-[30%]">
-        <PokemonBuild pokemon="groudon" setPokemonData={setDataPokemon2}/>
+        <PokemonBuild pokemon="groudon" move="precipice-blades" setPokemonData={setDataPokemon2}/>
       </div>
     </div>
   );
