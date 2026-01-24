@@ -10,7 +10,7 @@ import { useThemeStore } from "@stores/theme-store";
 interface PokemonBuildProps {
   pokemon?: string;
   move?: string;
-  setPokemonData: (data: {stats: number[], move: string}) => void;
+  setPokemonData: (data: {stats: number[], move: string, type: string[]}) => void;
 }
 
 export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProps) => {
@@ -24,8 +24,8 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
   const [selectedMove, setSelectedMove] = useState<string>(move || "dragon-ascent");
 
   useEffect(() => {
-    setPokemonData({stats:stats, move: selectedMove});
-  }, [stats, selectedMove]);
+    setPokemonData({stats:stats, move: selectedMove, type:type});
+  }, [stats, selectedMove, type]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemonData", selectedPokemon],
