@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 interface stat {
   base_stat: number;
   effort: number;
@@ -34,7 +36,7 @@ export const PokemonInfo = ({ sprite, stats, type }: SpriteStatsProps) => {
 
   return (
     <div className="flex flex-col md:flex-row items-center gap-4 w-full p-2 justify-between">
-      <div className="w-[25%] flex flex-col items-center">
+      <div className="flex flex-col items-center">
       <img
         src={sprite}
         alt="Pokemon sprite"
@@ -53,15 +55,13 @@ export const PokemonInfo = ({ sprite, stats, type }: SpriteStatsProps) => {
         </div>
       )}
       </div>
-      <div className="flex flex-col w-full md:w-[60%] gap-2">
+      <div className="grid grid-cols-[auto_auto_1fr] w-full gap-2 items-center">
         {stats.map((stat) => {
           const percentage = (stat.base_stat / 255) * 100;
           const barColor = getStatColor(stat.base_stat);
 
           return (
-            <div
-              key={stat.stat.name}
-              className="flex items-center justify-between gap-2 w-full"
+            <Fragment key={stat.stat.name}
             >
               <div className="text-right breaking-words text-nowrap">
                 {statNameMap[stat.stat.name] || stat.stat.name}
@@ -69,13 +69,13 @@ export const PokemonInfo = ({ sprite, stats, type }: SpriteStatsProps) => {
 
               <div className="text-left text-nowrap">{stat.base_stat}</div>
 
-              <div className="w-[60%] rounded h-[clamp(0.2rem,0.5vw,4rem)]">
+              <div className="w-full rounded h-[clamp(0.2rem,0.5vw,4rem)]">
                 <div
                   className={`${barColor} h-full rounded`}
                   style={{ width: `${percentage}%` }}
                 ></div>
               </div>
-            </div>
+            </Fragment>
           );
         })}
       </div>
