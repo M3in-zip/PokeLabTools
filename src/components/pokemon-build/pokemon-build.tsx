@@ -7,10 +7,17 @@ import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
 
+export interface pokemonInfo {
+  stats: number[];
+  type: string[];
+  weight: number;
+  move: string;
+}
+
 interface PokemonBuildProps {
   pokemon?: string;
   move?: string;
-  setPokemonData: (data: {stats: number[], move: string, type: string[]}) => void;
+  setPokemonData: (data: pokemonInfo) => void;
 }
 
 export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProps) => {
@@ -18,14 +25,11 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
   const [baseStats, setBaseStats] = useState<number[]>([105, 150, 90, 150, 90, 95]);
   const [pokemonMoves, setPokemonMoves] = useState<string[]>([])
-  const [type, setType] = useState<string[]>([]);
-
-  const [stats, setStats] = useState<number[]>([]);
-  const [selectedMove, setSelectedMove] = useState<string>(move || "dragon-ascent");
+  const [pokemonInfo, setPokemonInfo] = useState<pokemonInfo>({stats: [], type: [], weight: 0, move: move || "dragon-ascent"});
 
   useEffect(() => {
-    setPokemonData({stats:stats, move: selectedMove, type:type});
-  }, [stats, selectedMove, type]);
+    setPokemonData(pokemonInfo);
+  }, [pokemonInfo]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemonData", selectedPokemon],
@@ -42,9 +46,18 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
       const pokemonTypes = data.types.map((type:{type:{name:string}}) => type.type.name);
       setBaseStats(stats);
       setPokemonMoves(movesNames);
-      setType(pokemonTypes);
+      setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight}));
+      /* console.log("Fetched data for ", selectedPokemon, data); */
     }
   }, [data]);
+
+  const handleStatsChange = (newStats: number[]) => {
+    setPokemonInfo((curr:any) => ({...curr, stats: newStats}));
+  }
+
+  const handleMoveChange = (newMove: string) => {
+    setPokemonInfo((curr) => ({...curr, move: newMove}));
+  }
 
   return (
     <div className={`relative w-full min-w-[240px] h-full text-xs ${theme === "dark" ? "text-white" : "text-black"}`}>
@@ -53,10 +66,10 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
         onClick={setSelectedPokemon}
       />
       {data && (
-        <PokemonInfo sprite={data.sprites.front_default} stats={data.stats} type={type}/>
+        <PokemonInfo sprite={data.sprites.front_default} stats={data.stats} type={pokemonInfo.type}/>
       )}
-      {data && <PokemonStats baseStats={baseStats} onChange={setStats}/>}
-      {data && pokemonMoves.length > 0 && <PokemonMoveSearch moves={pokemonMoves} onClick={setSelectedMove} move={selectedMove}></PokemonMoveSearch>}
+      {data && <PokemonStats baseStats={baseStats} onChange={handleStatsChange}/>}
+      {data && pokemonMoves.length > 0 && <PokemonMoveSearch moves={pokemonMoves} onClick={handleMoveChange} move={pokemonInfo.move}></PokemonMoveSearch>}
       {isLoading && <Spinner />}
     </div>
   );

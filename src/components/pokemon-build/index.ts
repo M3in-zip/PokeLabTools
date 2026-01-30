@@ -1,1 +1,1 @@
-export { PokemonBuild } from './pokemon-build';
+export { PokemonBuild, type pokemonInfo } from './pokemon-build';

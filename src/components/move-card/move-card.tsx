@@ -9,8 +9,8 @@ interface MoveCardProps {
 
 export const MoveCard = ({ move, onClick }: MoveCardProps) => {
   const selectedMove = moves.find((current) => current.name === move);
-  const moveIconSrc = (damage_class: string) => {
-  switch (damage_class.toLowerCase()) {
+  const moveIconSrc = (category: string) => {
+  switch (category.toLowerCase()) {
     case "physical":
       return "https://img.pokemondb.net/images/icons/move-physical.png";
     case "special":
@@ -47,10 +47,10 @@ export const MoveCard = ({ move, onClick }: MoveCardProps) => {
           </div>
           {/* damage class icon */}
           <div className="border-2 border-white rounded-lg bg-gray-300 w-6 h-6 items-center flex justify-center">
-            {selectedMove?.damage_class && (
+            {selectedMove?.category && (
               <img
-                src={moveIconSrc(selectedMove.damage_class) || ""}
-                alt={selectedMove.damage_class}
+                src={moveIconSrc(selectedMove.category) || ""}
+                alt={selectedMove.category}
               />
             )}
           </div>
