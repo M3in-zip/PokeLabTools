@@ -16,7 +16,6 @@ export interface pokemonInfo {
 
 interface PokemonBuildProps {
   pokemon?: string;
-  move?: string;
   setPokemonData: (data: pokemonInfo) => void;
 }
 
@@ -44,9 +43,10 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
       const stats = data.stats.map((stat: any) => stat.base_stat);
       const movesNames = data.moves.map((move:{move:{name:string}}) => move.move.name);
       const pokemonTypes = data.types.map((type:{type:{name:string}}) => type.type.name);
+      console.log("Moves names: ", data.moves);
       setBaseStats(stats);
       setPokemonMoves(movesNames);
-      setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight}));
+      setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight, move: data.moves[0]?.move.name || ""}));
       /* console.log("Fetched data for ", selectedPokemon, data); */
     }
   }, [data]);

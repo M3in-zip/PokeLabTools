@@ -46,7 +46,8 @@ export const ModifiersCard = ({
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "sun", "weather")}
         {buttonCustom(middleButtonClasses, "rain", "weather")}
-        {buttonCustom(rightButtonClasses, "sand", "weather")}
+        {buttonCustom(middleButtonClasses, "sand", "weather")}
+        {buttonCustom(rightButtonClasses, "snow", "weather")}
       </div>
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "grassy", "terrain")}
