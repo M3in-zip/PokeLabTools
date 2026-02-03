@@ -7,9 +7,10 @@ import { PokemonBuild, type pokemonInfo } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 import moves from "@/data/moves.json";
 import { type PokemonMove } from "@/data/move-rules.ts";
+import { type Stats } from "@components/pokemon-stats/pokemon-stats";
 
 interface pokemonData {
-  stats: number[];
+  stats: Stats;
   type: string[];
   weight: number;
   move: PokemonMove;
@@ -21,8 +22,8 @@ export const Route = createFileRoute("/calculator")({
 
 function PokemonCalculator() {
   const setPokemonList = usePokemonStore((state) => state.setPokemonList);
-  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "origin-pulse") as PokemonMove, type: ["water"]});
-  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "precipice-blades") as PokemonMove, type: ["ground"]});
+  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, weight: 0, move: moves.find(m => m.name === "origin-pulse") as PokemonMove, type: ["water"]});
+  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, weight: 0, move: moves.find(m => m.name === "precipice-blades") as PokemonMove, type: ["ground"]});
   const [modifiers, setModifiers] = useState({weather: "sun", terrain: "grassy"});
 
   useEffect(() => {

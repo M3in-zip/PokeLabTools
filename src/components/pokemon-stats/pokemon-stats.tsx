@@ -3,9 +3,18 @@ import { useEffect, useState, useMemo, Fragment } from "react";
 import { DropDown } from "../drop-down";
 import type { pokemonNature } from "@/stores/pokemonStore";
 
+export interface Stats {
+  HP:number;
+  Atk:number;
+  Def:Number;
+  "Sp. Atk":number;
+  "Sp. Def":number;
+  Speed:number;
+}
+
 export type Stat = "HP" | "Atk" | "Def" | "Sp. Atk" | "Sp. Def" | "Speed";
 const STAT_NAMES = ["HP", "Atk", "Def", "Sp. Atk", "Sp. Def", "Speed"] as const;
-export type StatValue = number | "";
+export type IvEvValue = number | "";
 export const STAT_STAGE_MODIFIERS: Record<number, number> = {
   [-6]: 2 / 8, // 0.25
   [-5]: 2 / 7, // ~0.285
@@ -24,11 +33,12 @@ export const STAT_STAGE_MODIFIERS: Record<number, number> = {
 
 interface IVEVProps {
   baseStats: number[];
-  onChange: (stats: number[]) => void;
+  onChange: (stats: Stats) => void;
 }
 
 export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const [selectedNature, setSelectedNature] = useState<string>("--");
+
   const createStatObject = <T,>(initialValue: T) => {
     return STAT_NAMES.reduce(
       (acc, stat) => {
@@ -38,11 +48,12 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
       {} as Record<Stat, T>,
     );
   };
-  const [IVs, setIVs] = useState<Record<Stat, StatValue>>(
-    createStatObject<StatValue>(31),
+
+  const [IVs, setIVs] = useState<Record<Stat, IvEvValue>>(
+    createStatObject<IvEvValue>(31),
   );
-  const [EVs, setEVs] = useState<Record<Stat, StatValue>>(
-    createStatObject<StatValue>(0),
+  const [EVs, setEVs] = useState<Record<Stat, IvEvValue>>(
+    createStatObject<IvEvValue>(0),
   );
   const [level, setLevel] = useState<string | number>(50);
   const [statChanges, setStatChanges] = useState<Record<Stat, string | number>>(
@@ -102,14 +113,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   }, [baseStats, IVs, EVs, level, selectedNatureObj, statChanges]);
 
   useEffect(() => {
-    onChange([
-      finalStats["HP"],
-      finalStats["Atk"],
-      finalStats["Def"],
-      finalStats["Sp. Atk"],
-      finalStats["Sp. Def"],
-      finalStats["Speed"],
-    ]);
+    onChange(finalStats);
   }, [finalStats]);
 
   const handleChange = (
@@ -151,7 +155,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const customInput = (
     min: number,
     max: number,
-    value: StatValue,
+    value: IvEvValue,
     stat: Stat,
     type: "IV" | "EV",
     step?: number,

@@ -2,13 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { PokemonSearchInput } from "../pokemon-search-input";
 import { useEffect, useState } from "react";
 import { PokemonInfo } from "../pokemon-info";
-import { PokemonStats } from "@/components/pokemon-stats";
+import { PokemonStats, type Stats } from "@/components/pokemon-stats";
 import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
 
 export interface pokemonInfo {
-  stats: number[];
+  stats: Stats;
   type: string[];
   weight: number;
   move: string;
@@ -19,12 +19,12 @@ interface PokemonBuildProps {
   setPokemonData: (data: pokemonInfo) => void;
 }
 
-export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProps) => {
+export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => {
   const theme = useThemeStore((state) => state.theme);
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
   const [baseStats, setBaseStats] = useState<number[]>([105, 150, 90, 150, 90, 95]);
   const [pokemonMoves, setPokemonMoves] = useState<string[]>([])
-  const [pokemonInfo, setPokemonInfo] = useState<pokemonInfo>({stats: [], type: [], weight: 0, move: move || "dragon-ascent"});
+  const [pokemonInfo, setPokemonInfo] = useState<pokemonInfo>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, type: [], weight: 0, move: "dragon-ascent"});
 
   useEffect(() => {
     setPokemonData(pokemonInfo);
@@ -51,7 +51,7 @@ export const PokemonBuild = ({ setPokemonData, pokemon, move }: PokemonBuildProp
     }
   }, [data]);
 
-  const handleStatsChange = (newStats: number[]) => {
+  const handleStatsChange = (newStats: Stats) => {
     setPokemonInfo((curr:any) => ({...curr, stats: newStats}));
   }
 

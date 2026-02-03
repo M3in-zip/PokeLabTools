@@ -1,10 +1,12 @@
+import { type Stats } from "@components/pokemon-stats/pokemon-stats";
+
 export interface MoveRule {
   moves: string[];
   apply: (context: Context) => any;
 }
 
 interface Pokemon {
-  stats: number[];
+  stats: Stats;
   type: string[];
   weight: number;
 }
@@ -146,7 +148,7 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["body-press"],
     apply: (context) => {
-      return { ...context, stats: {...context.user.stats, [1]: context.user.stats[2]} };
+      return { ...context, stats: {...context.user.stats, [1]: context.user.stats.Atk} };
     },
   },
   {
@@ -170,7 +172,7 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["electro-ball"],
     apply: (context) => {
-      const ratio = context.target.stats[6] / context.user.stats[6];
+      const ratio = context.target.stats.Speed / context.user.stats.Speed;
       var pow = 40;
       if (ratio < 0.25) pow = 150;
       else if (ratio < 0.33) pow = 120;
