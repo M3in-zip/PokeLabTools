@@ -6,26 +6,13 @@ import { usePokemonStore } from "@/stores/pokemonStore";
 import { PokemonBuild, type pokemonInfo } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 import moves from "@/data/moves.json";
-
-interface pokemonMove {
-  id: number;
-  name: string;
-  type: string;
-  power: number | null;
-  description: string;
-  category: "physical" | "special" | "status" | string;
-  accuracy: number | null;
-  pp: number;
-  priority: number;
-  stat_changes: any[] | null;
-  target: string;
-}
+import { type PokemonMove } from "@/data/move-rules.ts";
 
 interface pokemonData {
   stats: number[];
   type: string[];
   weight: number;
-  move: pokemonMove;
+  move: PokemonMove;
 }
 
 export const Route = createFileRoute("/calculator")({
@@ -34,8 +21,8 @@ export const Route = createFileRoute("/calculator")({
 
 function PokemonCalculator() {
   const setPokemonList = usePokemonStore((state) => state.setPokemonList);
-  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "origin-pulse") as pokemonMove, type: ["water"]});
-  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "precipice-blades") as pokemonMove, type: ["ground"]});
+  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "origin-pulse") as PokemonMove, type: ["water"]});
+  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({stats: [1,1,1,1,1,1], weight: 0, move: moves.find(m => m.name === "precipice-blades") as PokemonMove, type: ["ground"]});
   const [modifiers, setModifiers] = useState({weather: "sun", terrain: "grassy"});
 
   useEffect(() => {
@@ -63,13 +50,13 @@ function PokemonCalculator() {
 
   const handlePokemonDataChange = (data: pokemonInfo) => {
     const movePokemon1 = moves.find(m => m.name === data.move);
-    if (movePokemon1) setDataPokemon1({...data, move: movePokemon1 as pokemonMove});
+    if (movePokemon1) setDataPokemon1({...data, move: movePokemon1 as PokemonMove});
     else console.log("Move not found: ", data.move);
   }
 
   const handlePokemon2DataChange = (data: pokemonInfo) => {
     const movePokemon2 = moves.find(m => m.name === data.move);
-    if (movePokemon2) setDataPokemon2({...data, move: movePokemon2 as pokemonMove});
+    if (movePokemon2) setDataPokemon2({...data, move: movePokemon2 as PokemonMove});
     else console.log("Move not found: ", data.move);
   }
 
