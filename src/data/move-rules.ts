@@ -1,28 +1,8 @@
-import { type Stats } from "@components/pokemon-stats/pokemon-stats";
+import type { Stats, PokemonMove, Pokemon } from "@/types/pokemon"
 
 export interface MoveRule {
   moves: string[];
   apply: (context: Context) => any;
-}
-
-interface Pokemon {
-  stats: Stats;
-  type: string[];
-  weight: number;
-}
-
-export interface PokemonMove {
-  id: number;
-  name: string;
-  type: string;
-  power: number | null;
-  description: string;
-  category: "physical" | "special" | "status" | string;
-  accuracy: number | null;
-  pp: number;
-  priority: number;
-  stat_changes: any[] | null;
-  target: string;
 }
 
 interface Context {

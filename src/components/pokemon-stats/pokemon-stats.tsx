@@ -2,37 +2,28 @@ import { usePokemonStore } from "@/stores/pokemonStore";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { DropDown } from "../drop-down";
 import type { pokemonNature } from "@/stores/pokemonStore";
+import type { Stats, Stat } from "@/types/pokemon"
 
-export interface Stats {
-  HP:number;
-  Atk:number;
-  Def:Number;
-  "Sp. Atk":number;
-  "Sp. Def":number;
-  Speed:number;
-}
-
-export type Stat = "HP" | "Atk" | "Def" | "Sp. Atk" | "Sp. Def" | "Speed";
 const STAT_NAMES = ["HP", "Atk", "Def", "Sp. Atk", "Sp. Def", "Speed"] as const;
 export type IvEvValue = number | "";
 export const STAT_STAGE_MODIFIERS: Record<number, number> = {
-  [-6]: 2 / 8, // 0.25
-  [-5]: 2 / 7, // ~0.285
-  [-4]: 2 / 6, // ~0.333
-  [-3]: 2 / 5, // 0.4
-  [-2]: 2 / 4, // 0.5
-  [-1]: 2 / 3, // ~0.666
-  [0]: 1.0, // Neutro
-  [1]: 3 / 2, // 1.5
-  [2]: 4 / 2, // 2.0
-  [3]: 5 / 2, // 2.5
-  [4]: 6 / 2, // 3.0
-  [5]: 7 / 2, // 3.5
-  [6]: 8 / 2, // 4.0
+  [-6]: 2 / 8,
+  [-5]: 2 / 7,
+  [-4]: 2 / 6,
+  [-3]: 2 / 5,
+  [-2]: 2 / 4,
+  [-1]: 2 / 3,
+  [0]: 1.0,
+  [1]: 3 / 2,
+  [2]: 4 / 2,
+  [3]: 5 / 2,
+  [4]: 6 / 2,
+  [5]: 7 / 2,
+  [6]: 8 / 2,
 } as const;
 
 interface IVEVProps {
-  baseStats: number[];
+  baseStats: Stats;
   onChange: (stats: Stats) => void;
 }
 
@@ -63,14 +54,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const nonNeutralNatures: pokemonNature[] = usePokemonStore((state) =>
     state.getNonNeutralNatures(),
   );
-  const baseStatsObj: Record<Stat, number> = {
-    HP: baseStats[0],
-    Atk: baseStats[1],
-    Def: baseStats[2],
-    "Sp. Atk": baseStats[3],
-    "Sp. Def": baseStats[4],
-    Speed: baseStats[5],
-  };
+
   const selectedNatureObj: pokemonNature | undefined = nonNeutralNatures.find(
     (nature) => nature.name === selectedNature,
   );
@@ -78,9 +62,9 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const calculateStat = (stat: Stat) =>
     Math.floor(
       Math.floor(
-        ((2 * baseStatsObj[stat] +
-          (IVs[stat] ? (IVs[stat] as number) : 0) +
-          (EVs[stat] ? (EVs[stat] as number) : 0) / 4) *
+        ((2 * baseStats[stat] +
+          (IVs[stat] || 0) +
+          (EVs[stat] || 0) / 4) *
           (level as number)) /
           100 +
           5,
@@ -96,7 +80,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const finalStats = useMemo<Record<Stat, number>>(() => {
     return {
       HP: Math.floor(
-        ((2 * baseStatsObj["HP"] +
+        ((2 * baseStats["HP"] +
           (IVs["HP"] ? (IVs["HP"] as number) : 0) +
           (EVs["HP"] ? (EVs["HP"] as number) : 0) / 4) *
           (level as number)) /

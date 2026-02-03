@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { getPokemonBaseList } from "@/api/pokemon.ts";
 import { usePokemonStore } from "@/stores/pokemonStore";
-import { PokemonBuild, type pokemonInfo } from "@/components/pokemon-build";
+import { PokemonBuild, type PokemonInfo } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 import moves from "@/data/moves.json";
-import { type PokemonMove } from "@/data/move-rules.ts";
-import { type Stats } from "@components/pokemon-stats/pokemon-stats";
+import type { Stats, PokemonMove } from "@/types/pokemon";
 
+//equal to PokemonInfo but move is PokemonMove type
 interface pokemonData {
   stats: Stats;
   type: string[];
@@ -22,15 +22,37 @@ export const Route = createFileRoute("/calculator")({
 
 function PokemonCalculator() {
   const setPokemonList = usePokemonStore((state) => state.setPokemonList);
-  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, weight: 0, move: moves.find(m => m.name === "origin-pulse") as PokemonMove, type: ["water"]});
-  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, weight: 0, move: moves.find(m => m.name === "precipice-blades") as PokemonMove, type: ["ground"]});
-  const [modifiers, setModifiers] = useState({weather: "sun", terrain: "grassy"});
+  const [dataPokemon1, setDataPokemon1] = useState<pokemonData>({
+    stats: { HP: 1, Atk: 1, Def: 1, "Sp. Atk": 1, "Sp. Def": 1, Speed: 1 },
+    weight: 0,
+    move: moves.find((m) => m.name === "origin-pulse") as PokemonMove,
+    type: ["water"],
+  });
+  const [dataPokemon2, setDataPokemon2] = useState<pokemonData>({
+    stats: { HP: 1, Atk: 1, Def: 1, "Sp. Atk": 1, "Sp. Def": 1, Speed: 1 },
+    weight: 0,
+    move: moves.find((m) => m.name === "precipice-blades") as PokemonMove,
+    type: ["ground"],
+  });
+  const [modifiers, setModifiers] = useState({
+    weather: "sun",
+    terrain: "grassy",
+  });
 
   useEffect(() => {
-    console.log("Pokemon 1 data changed: ", dataPokemon1, "Pokemon 2 data: ", dataPokemon2);
+    console.log(
+      "Pokemon 1 data changed: ",
+      dataPokemon1,
+      "Pokemon 2 data: ",
+      dataPokemon2,
+    );
   }, [dataPokemon1, dataPokemon2]);
 
-  const { data:pokemonList, isLoading:loadingPokemonList, error:errorPokemonList } = useQuery({
+  const {
+    data: pokemonList,
+    isLoading: loadingPokemonList,
+    error: errorPokemonList,
+  } = useQuery({
     queryKey: ["pokemonList"],
     queryFn: () => getPokemonBaseList(),
     select: (data) =>
@@ -47,28 +69,37 @@ function PokemonCalculator() {
     if (pokemonList) setPokemonList(pokemonList);
   }, [pokemonList, setPokemonList]);
 
-  if (errorPokemonList) return <div className="p-2">Errore nel caricamento</div>;
+  if (errorPokemonList)
+    return <div className="p-2">Errore nel caricamento</div>;
 
-  const handlePokemonDataChange = (data: pokemonInfo) => {
-    const movePokemon1 = moves.find(m => m.name === data.move);
-    if (movePokemon1) setDataPokemon1({...data, move: movePokemon1 as PokemonMove});
+  const handlePokemonDataChange = (data: PokemonInfo) => {
+    const movePokemon1 = moves.find((m) => m.name === data.move);
+    if (movePokemon1)
+      setDataPokemon1({ ...data, move: movePokemon1 as PokemonMove });
     else console.log("Move not found: ", data.move);
-  }
+  };
 
-  const handlePokemon2DataChange = (data: pokemonInfo) => {
-    const movePokemon2 = moves.find(m => m.name === data.move);
-    if (movePokemon2) setDataPokemon2({...data, move: movePokemon2 as PokemonMove});
+  const handlePokemon2DataChange = (data: PokemonInfo) => {
+    const movePokemon2 = moves.find((m) => m.name === data.move);
+    if (movePokemon2)
+      setDataPokemon2({ ...data, move: movePokemon2 as PokemonMove });
     else console.log("Move not found: ", data.move);
-  }
+  };
 
   return (
     <div className="relative p-2 w-full flex flex-row gap-2 justify-between">
       <div className="">
-        <PokemonBuild pokemon="kyogre" setPokemonData={handlePokemonDataChange}/>
+        <PokemonBuild
+          pokemon="kyogre"
+          setPokemonData={handlePokemonDataChange}
+        />
       </div>
-      <ModifiersCard modifiers={modifiers} setModifiers={setModifiers}/>
+      <ModifiersCard modifiers={modifiers} setModifiers={setModifiers} />
       <div className="">
-        <PokemonBuild pokemon="groudon" setPokemonData={handlePokemon2DataChange}/>
+        <PokemonBuild
+          pokemon="groudon"
+          setPokemonData={handlePokemon2DataChange}
+        />
       </div>
     </div>
   );

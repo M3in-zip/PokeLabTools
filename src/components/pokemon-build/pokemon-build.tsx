@@ -2,12 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { PokemonSearchInput } from "../pokemon-search-input";
 import { useEffect, useState } from "react";
 import { PokemonInfo } from "../pokemon-info";
-import { PokemonStats, type Stats } from "@/components/pokemon-stats";
+import { PokemonStats } from "@/components/pokemon-stats";
 import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
+import type { Stats } from "@/types/pokemon";
 
-export interface pokemonInfo {
+export interface PokemonInfo {
   stats: Stats;
   type: string[];
   weight: number;
@@ -16,15 +17,15 @@ export interface pokemonInfo {
 
 interface PokemonBuildProps {
   pokemon?: string;
-  setPokemonData: (data: pokemonInfo) => void;
+  setPokemonData: (data: PokemonInfo) => void;
 }
 
 export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => {
   const theme = useThemeStore((state) => state.theme);
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
-  const [baseStats, setBaseStats] = useState<number[]>([105, 150, 90, 150, 90, 95]);
+  const [baseStats, setBaseStats] = useState<Stats>({HP:105,Atk:150,Def:90,"Sp. Atk":150,"Sp. Def":90,Speed:95});
   const [pokemonMoves, setPokemonMoves] = useState<string[]>([])
-  const [pokemonInfo, setPokemonInfo] = useState<pokemonInfo>({stats: {HP:1,Atk:1,Def:1,"Sp. Atk":1,"Sp. Def":1,Speed:1}, type: [], weight: 0, move: "dragon-ascent"});
+  const [pokemonInfo, setPokemonInfo] = useState<PokemonInfo>({stats: {HP:105,Atk:150,Def:90,"Sp. Atk":150,"Sp. Def":90,Speed:95}, type: [], weight: 0, move: "dragon-ascent"});
 
   useEffect(() => {
     setPokemonData(pokemonInfo);
@@ -41,10 +42,11 @@ export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => 
   useEffect(() => {
     if (data) {
       const stats = data.stats.map((stat: any) => stat.base_stat);
+      const statsObj = {HP:stats[0], Atk:stats[1], Def:stats[2], "Sp. Atk":stats[3], "Sp. Def":stats[4], Speed:stats[5]}
       const movesNames = data.moves.map((move:{move:{name:string}}) => move.move.name);
       const pokemonTypes = data.types.map((type:{type:{name:string}}) => type.type.name);
       console.log("Moves names: ", data.moves);
-      setBaseStats(stats);
+      setBaseStats(statsObj);
       setPokemonMoves(movesNames);
       setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight, move: data.moves[0]?.move.name || ""}));
       /* console.log("Fetched data for ", selectedPokemon, data); */
