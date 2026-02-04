@@ -35,6 +35,7 @@ function PokemonCalculator() {
     type: ["ground"],
   });
   const [modifiers, setModifiers] = useState({
+    battle:"double",
     weather: "sun",
     terrain: "grassy",
   });
@@ -87,7 +88,7 @@ function PokemonCalculator() {
   };
 
   return (
-    <div className="relative p-2 w-full flex flex-row gap-2 justify-between">
+    <div className="relative p-2 w-full flex flex-row gap-2">
       <div className="">
         <PokemonBuild
           pokemon="kyogre"

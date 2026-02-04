@@ -45,7 +45,6 @@ export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => 
       const statsObj = {HP:stats[0], Atk:stats[1], Def:stats[2], "Sp. Atk":stats[3], "Sp. Def":stats[4], Speed:stats[5]}
       const movesNames = data.moves.map((move:{move:{name:string}}) => move.move.name);
       const pokemonTypes = data.types.map((type:{type:{name:string}}) => type.type.name);
-      console.log("Moves names: ", data.moves);
       setBaseStats(statsObj);
       setPokemonMoves(movesNames);
       setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight, move: data.moves[0]?.move.name || ""}));

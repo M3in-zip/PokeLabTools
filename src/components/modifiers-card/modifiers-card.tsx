@@ -30,7 +30,7 @@ export const ModifiersCard = ({
     return(
       <button
         type="button"
-        className={`${className} ${baseText} ${bgClass} `}
+        className={`${className} ${baseText} ${bgClass} text-xs`}
         onClick={() => {
           setModifiers({ ...modifiers, [modifier]: active? "" : name });
         }}
@@ -42,7 +42,11 @@ export const ModifiersCard = ({
 
   return (
     <div className="flex flex-col items-center">
-      <span className="font-semibold">Weather</span>
+      <span className="font-semibold text-white">Field</span>
+      <div className="flex flex-row items-center, justify-content p-2">
+        {buttonCustom(leftButtonClasses, "single", "battle")}
+        {buttonCustom(rightButtonClasses, "double", "battle")}
+      </div>
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "sun", "weather")}
         {buttonCustom(middleButtonClasses, "rain", "weather")}

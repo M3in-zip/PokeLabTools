@@ -25,8 +25,8 @@ export const ImageButton = ({
     "overflow-hidden",
     "border-2",
     "border-[#231f20]",
-    "px-[clamp(0.75rem,2vw,1.25rem)]",
-    "py-[clamp(0.5rem,1.5vw,0.75rem)]",
+    "px-[clamp(0.75rem,2vw,1rem)]",
+    "py-[clamp(0.5rem,1.5vw,0.6rem)]",
     heightClass,
     className,
   ]
