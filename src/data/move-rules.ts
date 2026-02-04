@@ -1,12 +1,12 @@
-import type { PokemonMove, Pokemon } from "@/types/pokemon";
+import type { Context } from "@/types/pokemon";
 
 export interface MoveRule {
   moves: string[];
   apply: (context: Context) => Context;
 }
 
-interface Context {
-  level: number;
+/* export interface Context {
+  level:number;
   move: PokemonMove;
   user: Pokemon;
   target: Pokemon;
@@ -14,10 +14,13 @@ interface Context {
   terrain: string;
   notes: string;
   disabled?: boolean;
-  hits?: { min: number; max: number };
+  hits?: {min:number, max:number};
   pureDamage?: number;
   superEffectiveMultiplier?: number;
-}
+  crit?:boolean;
+  additionalType?: string;
+  ignoreWeather?: boolean;
+} */
 
 export const moveRules: MoveRule[] = [
   /* Disabled moves */
@@ -156,7 +159,10 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        stats: { ...context.user.stats, [1]: context.user.stats.Atk },
+        user: {
+          ...context.user,
+          stats: { ...context.user.stats, Atk: context.user.stats.Def },
+        },
       };
     },
   },
@@ -188,12 +194,12 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["electro-ball"],
     apply: (context) => {
-      const ratio = context.target.stats.Speed / context.user.stats.Speed;
-      var pow = 40;
-      if (ratio < 0.25) pow = 150;
-      else if (ratio < 0.33) pow = 120;
-      else if (ratio < 0.5) pow = 80;
-      else if (ratio < 1) pow = 60;
+      const ratio = context.user.stats.Speed / context.target.stats.Speed;
+      let pow = 40;
+      if (ratio >= 4) pow = 150;
+      else if (ratio >= 3) pow = 120;
+      else if (ratio >= 2) pow = 80;
+      else if (ratio >= 1) pow = 60;
       return {
         ...context,
         move: { ...context.move, power: pow },
@@ -214,7 +220,7 @@ export const moveRules: MoveRule[] = [
             target: "all-opponents",
           },
         };
-        else return context;
+      else return context;
     },
   },
   {
@@ -264,7 +270,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        additionalType: "flying"
+        additionalType: "flying",
       };
     },
   },
@@ -273,24 +279,171 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        user:{...context.user, stats:{...context.user.stats, Atk:context.target.stats.Atk}}
+        user: {
+          ...context.user,
+          stats: { ...context.user.stats, Atk: context.target.stats.Atk },
+        },
       };
     },
   },
   {
-    moves: ["grass-knot"],
+    moves: ["grass-knot", "low-kick"],
     apply: (context) => {
       var pow = 20;
-      if (context.target.weight / 10 >= 10 && context.target.weight / 10 < 25) pow = 40
-      else if (context.target.weight / 10 >= 25 && context.target.weight / 10 < 50) pow = 60;
-      else if (context.target.weight / 10 >= 50 && context.target.weight / 10 < 100) pow = 80;
-      else if (context.target.weight / 10 >= 100 && context.target.weight / 10 < 200) pow = 100;
+      if (context.target.weight / 10 >= 10 && context.target.weight / 10 < 25)
+        pow = 40;
+      else if (
+        context.target.weight / 10 >= 25 &&
+        context.target.weight / 10 < 50
+      )
+        pow = 60;
+      else if (
+        context.target.weight / 10 >= 50 &&
+        context.target.weight / 10 < 100
+      )
+        pow = 80;
+      else if (
+        context.target.weight / 10 >= 100 &&
+        context.target.weight / 10 < 200
+      )
+        pow = 100;
       else if (context.target.weight / 10 >= 200) pow = 120;
       return {
         ...context,
-        move:{...context.move, power:pow},
+        move: { ...context.move, power: pow },
         notes: "Power based on target weight",
       };
+    },
+  },
+  {
+    moves: ["gyro-ball"],
+    apply: (context) => {
+      return {
+        ...context,
+        move: {
+          ...context.move,
+          power: Math.min(
+            150,
+            Math.floor(
+              (25 * context.target.stats.Speed) / context.user.stats.Speed,
+            ),
+          ),
+        },
+      };
+    },
+  },
+  {
+    moves: ["hydro-steam"],
+    apply: (context) => {
+      if (context.weather === "sun")
+        return {
+          ...context,
+          move: { ...context.move, power: 120 },
+          ignoreWeather: true,
+        };
+      else return context;
+    },
+  },
+  {
+    moves: ["infernal-parade"],
+    apply: (context) => {
+      if (context.target.status)
+        return {
+          ...context,
+          move: { ...context.move, power: context.move.power! * 2 },
+        };
+      else return context;
+    },
+  },
+  {
+    moves: ["ivy-cudgel"],
+    apply: (context) => {
+      const types = context.user.type;
+      const type = types.find((t) => t !== "grass") ?? "grass";
+      return {
+        ...context,
+        move: { ...context.move, type: type },
+      };
+    },
+  },
+  {
+    moves: ["lash-out"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Damage doubled if any user stat lowered during this turn",
+      };
+    },
+  },
+  {
+    moves: ["last-respects"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Deal 100% more for each team member knocked out",
+      };
+    },
+  },
+  {
+    moves: ["magnitude"],
+    apply: (context) => {
+      return {
+        ...context,
+        move: { ...context.move, power: 10 },
+        hits: { min: 1, max: 15 },
+      };
+    },
+  },
+  {
+    moves: ["moongeist-beam"],
+    apply: (context) => {
+      return { ...context, ignoresAbility: true };
+    },
+  },
+  {
+    moves: ["payback"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes:
+          "Double damage if target attacks first, switches out or uses an item",
+      };
+    },
+  },
+  {
+    moves: ["photon-geyser"],
+    apply: (context) => {
+      if (context.user.stats.Atk > context.user.stats["Sp. Atk"])
+        return { ...context, move: { ...context.move, category: "physical" } };
+      else return context;
+    },
+  },
+  {
+    moves: ["psyblade"],
+    apply: (context) => ({
+      ...context,
+      additionalMultiplier:
+        context.terrain === "electric"
+          ? (context.additionalMultiplier ?? 1) * 1.3
+          : context.additionalMultiplier,
+    }),
+  },
+  {
+    moves: ["psyshock", "psystrike"],
+    apply: (context) => {
+      return { ...context, target:{...context.target, stats:{...context.target.stats, "Sp. Def":context.target.stats.Def}} };
+    },
+  },
+  {
+    moves: ["pursuit"],
+    apply: (context) => {
+      return { ...context, notes:"Double damage if target is switching out" };
+    },
+  },
+  {
+    moves: ["rage-fist"],
+    apply: (context) => {
+      return { ...context, target:{...context.target, stats:{...context.target.stats, "Sp. Def":context.target.stats.Def}} };
     },
   },
 ];

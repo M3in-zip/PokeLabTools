@@ -30,7 +30,8 @@ export interface PokemonMove {
   target: string;
 }
 
-interface Context {
+/* All you need to calc damage */
+export interface Context {
   level:number;
   move: PokemonMove;
   user: Pokemon;
@@ -43,5 +44,8 @@ interface Context {
   pureDamage?: number;
   superEffectiveMultiplier?: number;
   crit?:boolean;
-  additionalType: "flying";
+  additionalType?: string;
+  ignoreWeather?: boolean;
+  ignoresAbility?: boolean;
+  additionalMultiplier?: number;
 }
