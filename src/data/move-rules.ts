@@ -2,7 +2,7 @@ import type { PokemonMove, Pokemon } from "@/types/pokemon";
 
 export interface MoveRule {
   moves: string[];
-  apply: (context: Context) => any;
+  apply: (context: Context) => Context;
 }
 
 interface Context {
@@ -20,6 +20,7 @@ interface Context {
 }
 
 export const moveRules: MoveRule[] = [
+  /* Disabled moves */
   {
     moves: [
       "bolt beak",
@@ -54,6 +55,8 @@ export const moveRules: MoveRule[] = [
       return { ...context, disabled: true };
     },
   },
+
+  /* Multi hits moves */
   {
     moves: [
       "double hit",
@@ -97,18 +100,28 @@ export const moveRules: MoveRule[] = [
       return { ...context, hits: { min: 1, max: 10 } };
     },
   },
+
+  /* Fixed damaged moves */
   {
-    moves: ["dragon-rage", "sonic-boom", "seismic-toss", "night-shade", "final-gambit"],
+    moves: [
+      "dragon-rage",
+      "sonic-boom",
+      "seismic-toss",
+      "night-shade",
+      "final-gambit",
+    ],
     apply: (context) => {
       const name = context.move.name;
       var damage: number = 0;
       if (name === "dragon-rage") damage = 40;
       else if (name === "sonic-boom") damage = 20;
-      else if (name === "final-gambit") damage=context.user.stats.HP;
+      else if (name === "final-gambit") damage = context.user.stats.HP;
       else damage = context.level;
       return { ...context, pureDamage: damage };
     },
   },
+
+  /* Particular moves */
   {
     moves: ["assurance"],
     apply: (context) => {
@@ -192,7 +205,7 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["expanding-force"],
     apply: (context) => {
-      if (context.terrain === "psychic") {
+      if (context.terrain === "psychic")
         return {
           ...context,
           move: {
@@ -201,7 +214,7 @@ export const moveRules: MoveRule[] = [
             target: "all-opponents",
           },
         };
-      }
+        else return context;
     },
   },
   {
@@ -214,6 +227,7 @@ export const moveRules: MoveRule[] = [
         ["poison", "burn", "paralysis"].includes(context.user.status)
       )
         return { ...context, move: { ...context.move, power: power * 2 } };
+      else return context;
     },
   },
   {
@@ -224,5 +238,59 @@ export const moveRules: MoveRule[] = [
         notes: "This move cannot KO the opponent pokemon.",
       };
     },
-  }
+  },
+  {
+    moves: ["flail"],
+    apply: (context) => {
+      return {
+        ...context,
+        move: { ...context.move, power: 20 },
+        hits: { min: 1, max: 10 },
+        notes: "This move deals more damage with lower HP.",
+      };
+    },
+  },
+  {
+    moves: ["flower-trick", "frost-breath"],
+    apply: (context) => {
+      return {
+        ...context,
+        crit: true,
+      };
+    },
+  },
+  {
+    moves: ["flying-press"],
+    apply: (context) => {
+      return {
+        ...context,
+        additionalType: "flying"
+      };
+    },
+  },
+  {
+    moves: ["foul-play"],
+    apply: (context) => {
+      return {
+        ...context,
+        user:{...context.user, stats:{...context.user.stats, Atk:context.target.stats.Atk}}
+      };
+    },
+  },
+  {
+    moves: ["grass-knot"],
+    apply: (context) => {
+      var pow = 20;
+      if (context.target.weight / 10 >= 10 && context.target.weight / 10 < 25) pow = 40
+      else if (context.target.weight / 10 >= 25 && context.target.weight / 10 < 50) pow = 60;
+      else if (context.target.weight / 10 >= 50 && context.target.weight / 10 < 100) pow = 80;
+      else if (context.target.weight / 10 >= 100 && context.target.weight / 10 < 200) pow = 100;
+      else if (context.target.weight / 10 >= 200) pow = 120;
+      return {
+        ...context,
+        move:{...context.move, power:pow},
+        notes: "Power based on target weight",
+      };
+    },
+  },
 ];

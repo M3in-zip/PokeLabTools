@@ -42,4 +42,6 @@ interface Context {
   hits?: {min:number, max:number};
   pureDamage?: number;
   superEffectiveMultiplier?: number;
+  crit?:boolean;
+  additionalType: "flying";
 }
