@@ -20,6 +20,8 @@ export interface MoveRule {
   crit?:boolean;
   additionalType?: string;
   ignoreWeather?: boolean;
+  ignoresAbility?: boolean;
+  additionalMultiplier?: number;
 } */
 
 export const moveRules: MoveRule[] = [
@@ -431,19 +433,31 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["psyshock", "psystrike"],
     apply: (context) => {
-      return { ...context, target:{...context.target, stats:{...context.target.stats, "Sp. Def":context.target.stats.Def}} };
+      return {
+        ...context,
+        target: {
+          ...context.target,
+          stats: {
+            ...context.target.stats,
+            "Sp. Def": context.target.stats.Def,
+          },
+        },
+      };
     },
   },
   {
     moves: ["pursuit"],
     apply: (context) => {
-      return { ...context, notes:"Double damage if target is switching out" };
+      return { ...context, notes: "Double damage if target is switching out" };
     },
   },
   {
     moves: ["rage-fist"],
     apply: (context) => {
-      return { ...context, target:{...context.target, stats:{...context.target.stats, "Sp. Def":context.target.stats.Def}} };
+      return {
+        ...context,
+        notes:"Base power 50 (+50 per hit taken).",
+      };
     },
   },
 ];

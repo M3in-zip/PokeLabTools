@@ -6,71 +6,114 @@ import { PokemonStats } from "@/components/pokemon-stats";
 import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
-import type { Stats } from "@/types/pokemon";
-
-export interface PokemonInfo {
-  stats: Stats;
-  type: string[];
-  weight: number;
-  move: string;
-}
+import type { Stats, PokemonData } from "@/types/pokemon";
 
 interface PokemonBuildProps {
   pokemon?: string;
-  setPokemonData: (data: PokemonInfo) => void;
+  setPokemonData: (pokemonData: PokemonData, move: string) => void;
 }
 
-export const PokemonBuild = ({ setPokemonData, pokemon }: PokemonBuildProps) => {
+export const PokemonBuild = ({
+  setPokemonData,
+  pokemon,
+}: PokemonBuildProps) => {
   const theme = useThemeStore((state) => state.theme);
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
-  const [baseStats, setBaseStats] = useState<Stats>({HP:105,Atk:150,Def:90,"Sp. Atk":150,"Sp. Def":90,Speed:95});
-  const [pokemonMoves, setPokemonMoves] = useState<string[]>([])
-  const [pokemonInfo, setPokemonInfo] = useState<PokemonInfo>({stats: {HP:105,Atk:150,Def:90,"Sp. Atk":150,"Sp. Def":90,Speed:95}, type: [], weight: 0, move: "dragon-ascent"});
+  const [baseStats, setBaseStats] = useState<Stats>({
+    HP: 105,
+    Atk: 150,
+    Def: 90,
+    "Sp. Atk": 150,
+    "Sp. Def": 90,
+    Speed: 95,
+  });
+  const [pokemonMoves, setPokemonMoves] = useState<string[]>([]);
+  const [pokemonInfo, setPokemonInfo] = useState<PokemonData>({
+    name: selectedPokemon,
+    stats: {
+      HP: 105,
+      Atk: 150,
+      Def: 90,
+      "Sp. Atk": 150,
+      "Sp. Def": 90,
+      Speed: 95,
+    },
+    type: [],
+    weight: 0,
+  });
+  const [move, setMove] = useState<string>("dragon-ascent");
 
   useEffect(() => {
-    setPokemonData(pokemonInfo);
-  }, [pokemonInfo]);
+    setPokemonData(pokemonInfo, move);
+  }, [pokemonInfo, move]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemonData", selectedPokemon],
     queryFn: () =>
       fetch(`https://pokeapi.co/api/v2/pokemon/${selectedPokemon}`).then(
-        (res) => res.json()
+        (res) => res.json(),
       ),
   });
 
   useEffect(() => {
     if (data) {
       const stats = data.stats.map((stat: any) => stat.base_stat);
-      const statsObj = {HP:stats[0], Atk:stats[1], Def:stats[2], "Sp. Atk":stats[3], "Sp. Def":stats[4], Speed:stats[5]}
-      const movesNames = data.moves.map((move:{move:{name:string}}) => move.move.name);
-      const pokemonTypes = data.types.map((type:{type:{name:string}}) => type.type.name);
+      const statsObj = {
+        HP: stats[0],
+        Atk: stats[1],
+        Def: stats[2],
+        "Sp. Atk": stats[3],
+        "Sp. Def": stats[4],
+        Speed: stats[5],
+      };
+      const movesNames = data.moves.map(
+        (move: { move: { name: string } }) => move.move.name,
+      );
+      const pokemonTypes = data.types.map(
+        (type: { type: { name: string } }) => type.type.name,
+      );
       setBaseStats(statsObj);
       setPokemonMoves(movesNames);
-      setPokemonInfo((curr:any) => ({...curr, type: pokemonTypes, weight: data.weight, move: data.moves[0]?.move.name || ""}));
+      setPokemonInfo((curr) => ({
+        ...curr,
+        name: selectedPokemon,
+        type: pokemonTypes,
+        weight: data.weight,
+      }));
+      setMove(data.moves[0]?.move.name || "",)
       /* console.log("Fetched data for ", selectedPokemon, data); */
     }
   }, [data]);
 
   const handleStatsChange = (newStats: Stats) => {
-    setPokemonInfo((curr:any) => ({...curr, stats: newStats}));
-  }
-
-  const handleMoveChange = (newMove: string) => {
-    setPokemonInfo((curr) => ({...curr, move: newMove}));
-  }
+    setPokemonInfo((curr) => ({ ...curr, stats: newStats }));
+  };
 
   return (
-    <div className={`relative w-full min-w-[240px] h-full text-xs ${theme === "dark" ? "text-white" : "text-black"}`}>
+    <div
+      className={`relative w-full min-w-[240px] h-full text-xs ${theme === "dark" ? "text-white" : "text-black"}`}
+    >
       <PokemonSearchInput
         defaultValue={selectedPokemon}
         onClick={setSelectedPokemon}
       />
       {data && (
-        <PokemonInfo sprite={data.sprites.front_default} stats={data.stats} type={pokemonInfo.type}/>
+        <PokemonInfo
+          sprite={data.sprites.front_default}
+          stats={data.stats}
+          type={pokemonInfo.type}
+        />
       )}
-      {data && <PokemonStats baseStats={baseStats} onChange={handleStatsChange}/>}
-      {data && pokemonMoves.length > 0 && <PokemonMoveSearch moves={pokemonMoves} onClick={handleMoveChange} move={pokemonInfo.move}></PokemonMoveSearch>}
+      {data && (
+        <PokemonStats baseStats={baseStats} onChange={handleStatsChange} />
+      )}
+      {data && pokemonMoves.length > 0 && (
+        <PokemonMoveSearch
+          moves={pokemonMoves}
+          onClick={setMove}
+          move={move}
+        ></PokemonMoveSearch>
+      )}
       {isLoading && <Spinner />}
     </div>
   );
