@@ -55,6 +55,7 @@ export const moveRules: MoveRule[] = [
       "thousand arrows",
       "veevee volley",
       "wring out",
+      "revenge",
     ],
     apply: (context) => {
       return { ...context, disabled: true };
@@ -360,8 +361,13 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["ivy-cudgel"],
     apply: (context) => {
-      const types = context.user.type;
-      const type = types.find((t) => t !== "grass") ?? "grass";
+      const maskTypeMap: Record<string, string> = {
+        "ogerpon-hearthflame-mask": "fire",
+        "ogerpon-wellspring-mask": "water",
+        "ogerpon-cornerstone-mask": "rock",
+      };
+
+      const type = maskTypeMap[context.user.name] ?? "grass";
       return {
         ...context,
         move: { ...context.move, type: type },
@@ -382,7 +388,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Deal 100% more for each team member knocked out",
+        notes: "Deal 100% more for each user party knocked out",
       };
     },
   },
@@ -456,7 +462,95 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes:"Base power 50 (+50 per hit taken).",
+        notes: "Base power 50 (+50 per hits taken).",
+      };
+    },
+  },
+  {
+    moves: ["raging-bull"],
+    apply: (context) => {
+      const taurosTypeMap: Record<string, string> = {
+        "tauros-paldea-blaze-breed": "fire",
+        "tauros-paldea-aqua-breed": "water",
+        "tauros-paldea-combat-breed": "fighting",
+      };
+      const type = taurosTypeMap[context.user.name] ?? "normal";
+      return {
+        ...context,
+        move: { ...context.move, type: type },
+      };
+    },
+  },
+  {
+    moves: ["retaliate"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes:
+          "Double damage if a pokemon from the user party has fainted last turn",
+      };
+    },
+  },
+  {
+    moves: ["reversal"],
+    apply: (context) => {
+      return {
+        ...context,
+        move: { ...context.move, power: 20 },
+        hits: { min: 1, max: 10 },
+        notes:
+          "Deals more damage the lower the HP, maximum damage when HP < 4.2% (200 power)",
+      };
+    },
+  },
+  {
+    moves: ["rising-voltage"],
+    apply: (context) => {
+      if ("electric" === context.terrain)
+        return {
+          ...context,
+          move: { ...context.move, power: 140 },
+        };
+      return context;
+    },
+  },
+  {
+    moves: ["round"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Double damage if a pokemon used round the same turn",
+      };
+    },
+  },
+  {
+    moves: ["sheer-cold"],
+    apply: (context) => {
+      return { ...context, notes: "1 hit KO" };
+    },
+  },
+  {
+    moves: ["smelling-salts"],
+    apply: (context) => {
+      if (context.target.status === "paralysis")
+        return { ...context, move: { ...context.move, power: 120 } };
+      return context;
+    },
+  },
+  {
+    moves: ["steel-roller"],
+    apply: (context) => {
+      if (context.terrain === "")
+        return { ...context, pureDamage: 0, notes: "No terrain active" };
+      return context;
+    },
+  },
+  {
+    moves: ["stomping-tantrum"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Double damage if user last move failed (any reason)",
       };
     },
   },
