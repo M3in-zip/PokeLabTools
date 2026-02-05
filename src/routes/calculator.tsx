@@ -6,7 +6,7 @@ import { usePokemonStore } from "@/stores/pokemonStore";
 import { PokemonBuild } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 import moves from "@/data/moves.json";
-import type { Stats, PokemonMove, PokemonData } from "@/types/pokemon";
+import type { PokemonMove, PokemonData, Modifiers } from "@/types/pokemon";
 
 export const Route = createFileRoute("/calculator")({
   component: PokemonCalculator,
@@ -32,7 +32,7 @@ function PokemonCalculator() {
   const [move2, setMove2] = useState<PokemonMove>(
     moves.find((m) => m.name === "precipice-blades") as PokemonMove,
   );
-  const [modifiers, setModifiers] = useState({
+  const [modifiers, setModifiers] = useState<Modifiers>({
     battle: "double",
     weather: "sun",
     terrain: "grassy",

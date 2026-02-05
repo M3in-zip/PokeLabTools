@@ -38,6 +38,12 @@ export interface PokemonMove {
   target: string;
 }
 
+export interface Modifiers {
+  battle: "single" | "double"
+  weather: "sun" | "rain" | "sand" | "snow" | "",
+  terrain: "electric" | "grassy" | "psychic" | "misty" | "",
+}
+
 /* All you need to calc damage */
 export interface Context {
   level:number;

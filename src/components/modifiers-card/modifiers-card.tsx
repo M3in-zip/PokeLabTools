@@ -1,8 +1,9 @@
 import { useThemeStore } from "@stores/theme-store";
+import type { Modifiers } from "@/types/pokemon";
 
 interface ModifiersCardProps {
-  setModifiers: (modifiers: any) => void;
-  modifiers: any;
+  setModifiers: (modifiers: Modifiers) => void;
+  modifiers: Modifiers;
 }
 
 export const ModifiersCard = ({
@@ -16,8 +17,8 @@ export const ModifiersCard = ({
   const middleButtonClasses = "p-2 border-white border-2 border-l-1 border-r-1";
   const baseText = theme === "dark" ? "text-white" : "text-black";
 
-  const buttonCustom = (className: string, name: string, modifier: string) => {
-    const active = modifiers[modifier] === name;
+  const buttonCustom = (className: string, name: string, modifier: keyof Modifiers, notNullable?:boolean) => {
+    var active = (modifiers[modifier] === name);
     const bgClass =
     theme === "dark"
       ? active
@@ -26,13 +27,12 @@ export const ModifiersCard = ({
       : active
         ? "bg-slate-300"
         : "bg-white";
-
     return(
       <button
         type="button"
         className={`${className} ${baseText} ${bgClass} text-xs`}
         onClick={() => {
-          setModifiers({ ...modifiers, [modifier]: active? "" : name });
+          setModifiers({ ...modifiers, [modifier]: notNullable? name : active? "" : name });
         }}
       >
         {name.toUpperCase()}
@@ -44,8 +44,8 @@ export const ModifiersCard = ({
     <div className="flex flex-col items-center">
       <span className="font-semibold text-white">Field</span>
       <div className="flex flex-row items-center, justify-content p-2">
-        {buttonCustom(leftButtonClasses, "single", "battle")}
-        {buttonCustom(rightButtonClasses, "double", "battle")}
+        {buttonCustom(leftButtonClasses, "single", "battle", true)}
+        {buttonCustom(rightButtonClasses, "double", "battle", true)}
       </div>
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "sun", "weather")}
