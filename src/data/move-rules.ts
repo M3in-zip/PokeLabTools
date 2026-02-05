@@ -606,8 +606,17 @@ export const moveRules: MoveRule[] = [
       const weather = context.weather;
       const type = weatherTypeMap[weather] ?? "normal";
       if (type !== "normal")
-        return { ...context, move: { ...context.move, power: 100 } };
+        return { ...context, move: { ...context.move, type:type, power: 100 } };
       return context;
+    },
+  },
+  {
+    moves: ["crush-grip", "wring-out"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Dragon Energy's power decreases as the target's HP decreases.",
+      };
     },
   },
 ];
