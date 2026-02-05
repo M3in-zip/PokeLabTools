@@ -260,7 +260,13 @@ export const moveRules: MoveRule[] = [
     },
   },
   {
-    moves: ["flower-trick", "frost-breath"],
+    moves: [
+      "flower-trick",
+      "frost-breath",
+      "storm-throw",
+      "wicked-blow",
+      "zippy-zap",
+    ],
     apply: (context) => {
       return {
         ...context,
@@ -403,7 +409,7 @@ export const moveRules: MoveRule[] = [
     },
   },
   {
-    moves: ["moongeist-beam"],
+    moves: ["moongeist-beam", "sunsteel-strike"],
     apply: (context) => {
       return { ...context, ignoresAbility: true };
     },
@@ -524,7 +530,7 @@ export const moveRules: MoveRule[] = [
     },
   },
   {
-    moves: ["sheer-cold"],
+    moves: ["sheer-cold", "guilottine", "horn-drill", "fissure"],
     apply: (context) => {
       return { ...context, notes: "1 hit KO" };
     },
@@ -552,6 +558,56 @@ export const moveRules: MoveRule[] = [
         ...context,
         notes: "Double damage if user last move failed (any reason)",
       };
+    },
+  },
+  {
+    /* TODO add stat stages */ moves: ["stored-power"],
+    apply: (context) => {
+      return { ...context, notes: "Stronger for each stage increase" };
+    },
+  },
+  {
+    moves: ["surging-strike"],
+    apply: (context) => {
+      return { ...context, crit: true, hits: { min: 3, max: 3 } };
+    },
+  },
+  {
+    moves: ["triple-axel", "triple-kick"],
+    apply: (context) => {
+      return { ...context, hits: { min: 1, max: 6 } };
+    },
+  },
+  {
+    moves: ["venoshock"],
+    apply: (context) => {
+      if (context.target.status === "poison")
+        return { ...context, move: { ...context.move, power: 130 } };
+      return context;
+    },
+  },
+  {
+    moves: ["wake-up-slap"],
+    apply: (context) => {
+      if (context.target.status === "sleep")
+        return { ...context, move: { ...context.move, power: 140 } };
+      return context;
+    },
+  },
+  {
+    moves: ["weather-ball"],
+    apply: (context) => {
+      const weatherTypeMap: Record<string, string> = {
+        sun: "fire",
+        rain: "water",
+        sand: "rock",
+        snow: "ice",
+      };
+      const weather = context.weather;
+      const type = weatherTypeMap[weather] ?? "normal";
+      if (type !== "normal")
+        return { ...context, move: { ...context.move, power: 100 } };
+      return context;
     },
   },
 ];
