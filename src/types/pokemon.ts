@@ -47,19 +47,21 @@ export interface Modifiers {
 /* All you need to calc damage */
 export interface Context {
   level:number;
-  move: PokemonMove;
   user: Pokemon;
   target: Pokemon;
-  weather: string;
-  terrain: string;
-  notes: string;
-  disabled?: boolean;
+
+  move: PokemonMove;
   hits?: {min:number, max:number};
   pureDamage?: number;
-  superEffectiveMultiplier?: number;
-  crit?:boolean;
   additionalType?: string;
   ignoreWeather?: boolean;
   ignoresAbility?: boolean;
-  additionalMultiplier?: number;
+  moveMultiplier?: number;
+  maxPower?:number;
+  notes: string;
+  disabled?: boolean;
+  crit?:boolean;
+
+  weather: string;
+  terrain: string;
 }

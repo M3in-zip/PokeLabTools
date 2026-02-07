@@ -7,21 +7,23 @@ export interface MoveRule {
 
 /* export interface Context {
   level:number;
-  move: PokemonMove;
   user: Pokemon;
   target: Pokemon;
-  weather: string;
-  terrain: string;
-  notes: string;
-  disabled?: boolean;
+
+  move: PokemonMove;
   hits?: {min:number, max:number};
   pureDamage?: number;
-  superEffectiveMultiplier?: number;
-  crit?:boolean;
   additionalType?: string;
   ignoreWeather?: boolean;
   ignoresAbility?: boolean;
-  additionalMultiplier?: number;
+  moveMultiplier?: number;
+  maxPower?:number;
+  notes: string;
+  disabled?: boolean;
+  crit?:boolean;
+
+  weather: string;
+  terrain: string;
 } */
 
 export const moveRules: MoveRule[] = [
@@ -56,6 +58,7 @@ export const moveRules: MoveRule[] = [
       "veevee volley",
       "wring out",
       "revenge",
+      "zippy-zap",
     ],
     apply: (context) => {
       return { ...context, disabled: true };
@@ -182,7 +185,7 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["collision-course", "electro-drift"],
     apply: (context) => {
-      return { ...context, superEffectiveMultiplier: 5461 / 4096 };
+      return { ...context, moveMultiplier: 5461 / 4096 };
     },
   },
   {
@@ -219,7 +222,7 @@ export const moveRules: MoveRule[] = [
           ...context,
           move: {
             ...context.move,
-            power: Math.floor(context.move.power! * 1.5),
+            power: 120,
             target: "all-opponents",
           },
         };
@@ -229,13 +232,12 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["facade"],
     apply: (context) => {
-      const power = context.move.power as number;
       if (
         context.user.status &&
         context.move.power &&
         ["poison", "burn", "paralysis"].includes(context.user.status)
       )
-        return { ...context, move: { ...context.move, power: power * 2 } };
+        return { ...context, move: { ...context.move, power: 140 } };
       else return context;
     },
   },
@@ -254,7 +256,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         move: { ...context.move, power: 20 },
-        hits: { min: 1, max: 10 },
+        maxPower:200,
         notes: "This move deals more damage with lower HP.",
       };
     },
@@ -265,7 +267,6 @@ export const moveRules: MoveRule[] = [
       "frost-breath",
       "storm-throw",
       "wicked-blow",
-      "zippy-zap",
     ],
     apply: (context) => {
       return {
@@ -359,7 +360,7 @@ export const moveRules: MoveRule[] = [
       if (context.target.status)
         return {
           ...context,
-          move: { ...context.move, power: context.move.power! * 2 },
+          move: { ...context.move, power: 120 },
         };
       else return context;
     },
@@ -404,7 +405,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         move: { ...context.move, power: 10 },
-        hits: { min: 1, max: 15 },
+        maxPower: 150,
       };
     },
   },
@@ -434,13 +435,10 @@ export const moveRules: MoveRule[] = [
   },
   {
     moves: ["psyblade"],
-    apply: (context) => ({
-      ...context,
-      additionalMultiplier:
-        context.terrain === "electric"
-          ? (context.additionalMultiplier ?? 1) * 1.3
-          : context.additionalMultiplier,
-    }),
+    apply: (context) => {
+      if (context.terrain === "electric") return {...context, move: {...context.move, power:120}} ;
+      else return context;
+    },
   },
   {
     moves: ["psyshock", "psystrike"],
@@ -492,8 +490,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes:
-          "Double damage if a pokemon from the user party has fainted last turn",
+        notes: "Double damage if a pokemon from the user party has fainted last turn",
       };
     },
   },
@@ -503,7 +500,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         move: { ...context.move, power: 20 },
-        hits: { min: 1, max: 10 },
+        maxPower: 200,
         notes:
           "Deals more damage the lower the HP, maximum damage when HP < 4.2% (200 power)",
       };
@@ -556,7 +553,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Double damage if user last move failed (any reason)",
+        notes: "Double power if user last move failed (any reason)",
       };
     },
   },
@@ -573,9 +570,15 @@ export const moveRules: MoveRule[] = [
     },
   },
   {
-    moves: ["triple-axel", "triple-kick"],
+    moves: ["triple-axel"],
     apply: (context) => {
-      return { ...context, hits: { min: 1, max: 6 } };
+      return { ...context, maxPower: 120 };
+    },
+  },
+  {
+    moves: ["triple-kick"],
+    apply: (context) => {
+      return { ...context, maxPower:60 };
     },
   },
   {
@@ -619,4 +622,24 @@ export const moveRules: MoveRule[] = [
       };
     },
   },
+  {
+    moves: ["rollout"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "Doubles power every turn",
+      };
+    },
+  },
+  {
+    moves: ["misty-explosion"],
+    apply: (context) => {
+      return {
+        ...context,
+        notes: "150 power if user touches ground and misty terrain is active",
+      };
+    },
+  },
 ];
+
+/* TODO moves affected by sharpness */
