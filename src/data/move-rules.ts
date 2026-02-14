@@ -5,27 +5,6 @@ export interface MoveRule {
   apply: (context: Context) => Context;
 }
 
-/* export interface Context {
-  level:number;
-  user: Pokemon;
-  target: Pokemon;
-
-  move: PokemonMove;
-  hits?: {min:number, max:number};
-  pureDamage?: number;
-  additionalType?: string;
-  ignoreWeather?: boolean;
-  ignoresAbility?: boolean;
-  moveMultiplier?: number;
-  maxPower?:number;
-  notes: string;
-  disabled?: boolean;
-  crit?:boolean;
-
-  weather: string;
-  terrain: string;
-} */
-
 export const moveRules: MoveRule[] = [
   /* Disabled moves */
   {
@@ -137,7 +116,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         notes:
-          "Assurance's damage is doubled if the target has already taken damage this turn.",
+          [...context.notes, "Assurance's damage is doubled if the target has already taken damage this turn."],
       };
     },
   },
@@ -147,7 +126,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         notes:
-          "Avalanche's damage is doubled if the target has already damaged the user this turn.",
+          [...context.notes,"Avalanche's damage is doubled if the target has already damaged the user this turn."],
       };
     },
   },
@@ -156,7 +135,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Barb Barrage's damage is doubled if the target is poisoned.",
+        notes: [...context.notes,"Barb Barrage's damage is doubled if the target is poisoned."],
       };
     },
   },
@@ -178,7 +157,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         notes:
-          "Brine's damage is doubled if the target has less than half of its max HP remaining.",
+          [...context.notes,"Brine's damage is doubled if the target has less than half of its max HP remaining."],
       };
     },
   },
@@ -193,7 +172,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Dragon Energy's power decreases as the user's HP decreases.",
+        notes: [...context.notes,"Dragon Energy's power decreases as the user's HP decreases."],
       };
     },
   },
@@ -210,7 +189,7 @@ export const moveRules: MoveRule[] = [
         ...context,
         move: { ...context.move, power: pow },
         notes:
-          "Electro Ball's power is affected by the user's and target's speeds.",
+          [...context.notes,"Electro Ball's power is affected by the user's and target's speeds."],
       };
     },
   },
@@ -246,7 +225,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "This move cannot KO the opponent pokemon.",
+        notes: [...context.notes,"This move cannot KO the opponent pokemon."],
       };
     },
   },
@@ -257,7 +236,7 @@ export const moveRules: MoveRule[] = [
         ...context,
         move: { ...context.move, power: 20 },
         maxPower:200,
-        notes: "This move deals more damage with lower HP.",
+        notes: [...context.notes,"This move deals more damage with lower HP."],
       };
     },
   },
@@ -321,7 +300,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         move: { ...context.move, power: pow },
-        notes: "Power based on target weight",
+        notes: [...context.notes,"Power based on target weight"],
       };
     },
   },
@@ -386,7 +365,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Damage doubled if any user stat lowered during this turn",
+        notes: [...context.notes,"Damage doubled if any user stat lowered during this turn"],
       };
     },
   },
@@ -395,7 +374,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Deal 100% more for each user party knocked out",
+        notes: [...context.notes,"Deal 100% more for each user party knocked out"],
       };
     },
   },
@@ -421,7 +400,7 @@ export const moveRules: MoveRule[] = [
       return {
         ...context,
         notes:
-          "Double damage if target attacks first, switches out or uses an item",
+          [...context.notes,"Double damage if target attacks first, switches out or uses an item"],
       };
     },
   },
@@ -458,7 +437,7 @@ export const moveRules: MoveRule[] = [
   {
     moves: ["pursuit"],
     apply: (context) => {
-      return { ...context, notes: "Double damage if target is switching out" };
+      return { ...context, notes: [...context.notes,"Double damage if target is switching out"] };
     },
   },
   {
@@ -466,7 +445,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Base power 50 (+50 per hits taken).",
+        notes: [...context.notes,"Base power 50 (+50 per hits taken)."],
       };
     },
   },
@@ -490,7 +469,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Double damage if a pokemon from the user party has fainted last turn",
+        notes: [...context.notes,"Double damage if a pokemon from the user party has fainted last turn"],
       };
     },
   },
@@ -502,7 +481,7 @@ export const moveRules: MoveRule[] = [
         move: { ...context.move, power: 20 },
         maxPower: 200,
         notes:
-          "Deals more damage the lower the HP, maximum damage when HP < 4.2% (200 power)",
+          [...context.notes,"Deals more damage the lower the HP, maximum damage when HP < 4.2% (200 power)"],
       };
     },
   },
@@ -522,14 +501,14 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Double damage if a pokemon used round the same turn",
+        notes: [...context.notes,"Double damage if a pokemon used round the same turn"],
       };
     },
   },
   {
     moves: ["sheer-cold", "guilottine", "horn-drill", "fissure"],
     apply: (context) => {
-      return { ...context, notes: "1 hit KO" };
+      return { ...context, notes: [...context.notes,"1 hit KO"] };
     },
   },
   {
@@ -544,7 +523,7 @@ export const moveRules: MoveRule[] = [
     moves: ["steel-roller"],
     apply: (context) => {
       if (context.terrain === "")
-        return { ...context, pureDamage: 0, notes: "No terrain active" };
+        return { ...context, pureDamage: 0, notes: [...context.notes,"No terrain active"] };
       return context;
     },
   },
@@ -553,14 +532,14 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Double power if user last move failed (any reason)",
+        notes: [...context.notes,"Double power if user last move failed (any reason)"],
       };
     },
   },
   {
     /* TODO add stat stages */ moves: ["stored-power"],
     apply: (context) => {
-      return { ...context, notes: "Stronger for each stage increase" };
+      return { ...context, notes: [...context.notes,"Stronger for each stage increase"] };
     },
   },
   {
@@ -606,8 +585,8 @@ export const moveRules: MoveRule[] = [
         sand: "rock",
         snow: "ice",
       };
-      const weather = context.weather;
-      const type = weatherTypeMap[weather] ?? "normal";
+      const weather = context.weather? context.weather : undefined;
+      const type = weather? weatherTypeMap[weather] ?? "normal" : "normal";
       if (type !== "normal")
         return { ...context, move: { ...context.move, type:type, power: 100 } };
       return context;
@@ -618,7 +597,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Dragon Energy's power decreases as the target's HP decreases.",
+        notes: [...context.notes,"Dragon Energy's power decreases as the target's HP decreases."],
       };
     },
   },
@@ -627,7 +606,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "Doubles power every turn",
+        notes: [...context.notes,"Doubles power every turn"],
       };
     },
   },
@@ -636,7 +615,7 @@ export const moveRules: MoveRule[] = [
     apply: (context) => {
       return {
         ...context,
-        notes: "150 power if user touches ground and misty terrain is active",
+        notes: [...context.notes,"150 power if user touches ground and misty terrain is active"],
       };
     },
   },

@@ -53,10 +53,16 @@ export interface Context {
   ignoresAbility?: boolean;
   moveMultiplier?: number;
   maxPower?:number;
-  notes: string;
+  notes: string[];
   disabled?: boolean;
   crit?:boolean;
 
-  weather: string;
-  terrain: string;
+  "neutralizing-gas"?:boolean;
+  userAbilityModifier?: number;
+  targetAbilityModifier?: number;
+
+  weather?: string;
+  terrain?: string;
+
+  STAB?: number;
 }
