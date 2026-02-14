@@ -2,7 +2,7 @@ import { usePokemonStore } from "@/stores/pokemonStore";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { DropDown } from "../drop-down";
 import type { pokemonNature } from "@/stores/pokemonStore";
-import type { Stats, Stat } from "@/types/pokemon"
+import type { Stats, Stat } from "@/types/pokemon";
 
 const STAT_NAMES = ["HP", "Atk", "Def", "Sp. Atk", "Sp. Def", "Speed"] as const;
 export type IvEvValue = number | "";
@@ -62,9 +62,7 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const calculateStat = (stat: Stat) =>
     Math.floor(
       Math.floor(
-        ((2 * baseStats[stat] +
-          (IVs[stat] || 0) +
-          (EVs[stat] || 0) / 4) *
+        ((2 * baseStats[stat] + (IVs[stat] || 0) + (EVs[stat] || 0) / 4) *
           (level as number)) /
           100 +
           5,
@@ -135,7 +133,8 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
     }
   };
 
-  const inputClassName = "border-2 border-white rounded-md focus:outline-none w-full min-w-10 max-w-14";
+  const inputClassName =
+    "border-2 border-white rounded-md focus:outline-none w-full min-w-10 max-w-14";
   const customInput = (
     min: number,
     max: number,
@@ -186,7 +185,6 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
 
   return (
     <div className="p-2">
-
       {/* level */}
       <div className="flex flex-row items-center gap-2 mb-2">
         <span className="font-semibold whitespace-nowrap">LEVEL : </span>
@@ -250,14 +248,10 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
             </span>
 
             {/* Input IV */}
-            <div>
-              {customInput(0, 31, IVs[stat], stat, "IV")}
-            </div>
+            <div>{customInput(0, 31, IVs[stat], stat, "IV")}</div>
 
             {/* Input EV */}
-            <div>
-              {customInput(0, 252, EVs[stat], stat, "EV", 4)}
-            </div>
+            <div>{customInput(0, 252, EVs[stat], stat, "EV", 4)}</div>
             {/* Stat Change DropDown */}
             <div className="justify-self-center">
               {stat !== "HP" && statChangesDropdown(stat)}

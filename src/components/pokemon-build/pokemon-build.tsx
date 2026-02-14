@@ -6,17 +6,20 @@ import { PokemonStats } from "@/components/pokemon-stats";
 import { Spinner } from "../spinner";
 import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
-import type { Stats, PokemonData } from "@/types/pokemon";
+import type { Stats, Pokemon } from "@/types/pokemon";
+import { DropDown } from "@components/drop-down";
 
 interface PokemonBuildProps {
   pokemon?: string;
-  setPokemonData: (pokemonData: PokemonData, move: string) => void;
+  setPokemonData: (pokemonData: Pokemon, move: string) => void;
 }
 
 export const PokemonBuild = ({
   setPokemonData,
   pokemon,
 }: PokemonBuildProps) => {
+
+  /* STATE */
   const theme = useThemeStore((state) => state.theme);
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
   const [baseStats, setBaseStats] = useState<Stats>({
@@ -28,7 +31,7 @@ export const PokemonBuild = ({
     Speed: 95,
   });
   const [pokemonMoves, setPokemonMoves] = useState<string[]>([]);
-  const [pokemonInfo, setPokemonInfo] = useState<PokemonData>({
+  const [pokemonInfo, setPokemonInfo] = useState<Pokemon>({
     name: selectedPokemon,
     stats: {
       HP: 105,
@@ -39,9 +42,12 @@ export const PokemonBuild = ({
       Speed: 95,
     },
     type: [],
+    ability: "",
     weight: 0,
   });
   const [move, setMove] = useState<string>("dragon-ascent");
+  const [abilities, setAbilities] = useState<string[]>([]);
+  /* END STATE */
 
   useEffect(() => {
     setPokemonData(pokemonInfo, move);
@@ -72,15 +78,18 @@ export const PokemonBuild = ({
       const pokemonTypes = data.types.map(
         (type: { type: { name: string } }) => type.type.name,
       );
+      const abilities = data.abilities.map((a:{ability:{name:string}})=> a.ability.name);
       setBaseStats(statsObj);
       setPokemonMoves(movesNames);
       setPokemonInfo((curr) => ({
         ...curr,
         name: selectedPokemon,
         type: pokemonTypes,
+        ability: abilities[0],
         weight: data.weight,
       }));
       setMove(data.moves[0]?.move.name || "",)
+      setAbilities(abilities);
       /* console.log("Fetched data for ", selectedPokemon, data); */
     }
   }, [data]);
@@ -104,6 +113,22 @@ export const PokemonBuild = ({
           type={pokemonInfo.type}
         />
       )}
+      {data && (
+              <div className="flex flex-row items-center gap-2 px-2">
+                <span className="font-semibold whitespace-nowrap">ABILITY : </span>
+                <DropDown
+                  value={pokemonInfo.ability}
+                  onSelect={(val) => setPokemonInfo((curr)=> {return {...curr, ability:(val as string)}})}
+                  dataSource={[
+                    ...abilities.map((ab) => ({
+                      value: ab,
+                      item: <span className="font-semibold">{ab}</span>,
+                    })),
+                  ]}
+                />
+              </div>
+      )
+      }
       {data && (
         <PokemonStats baseStats={baseStats} onChange={handleStatsChange} />
       )}

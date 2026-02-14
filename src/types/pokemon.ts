@@ -9,18 +9,13 @@ export interface Stats {
   Speed:number;
 }
 
-export interface PokemonData {
-  name: string;
-  stats: Stats;
-  type: string[];
-  weight: number;
-}
-
+/* TODO add base stats, ability */
 export interface Pokemon {
   name:string;
   stats: Stats;
   type: string[];
   weight: number;
+  ability: string;
   status?: "burn" | "freeze" | "paralysis" | "poison" | "sleep";
 }
 
