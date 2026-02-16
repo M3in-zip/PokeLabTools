@@ -34,7 +34,7 @@ const bulletproofIgnores: string[] = [
   "zap-cannon",
 ];
 
-/* TODO check neutralizing-gas before using this vector, check air-lock, aura-break dark-aura fairy-aura, battery, beads-of-ruin */
+/* TODO check neutralizing-gas before using this vector, check air-lock, aura-break dark-aura fairy-aura, battery, beads-of-ruin, cloud-nine */
 export const abilityRules: AbilityRule[] = [
   {
     ability: "adaptability",
@@ -82,6 +82,12 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
+    ability: "aura-break",
+    apply: (context) => {
+      return { ...context, "aura-break": true };
+    },
+  },
+  {
     ability: "battle-armor",
     apply: (context) => {
       if (context.target.ability === "battle-armor")
@@ -100,7 +106,6 @@ export const abilityRules: AbilityRule[] = [
       return context;
     },
   },
-  /* TODO check if both are clorophyll call this only once */
   {
     ability: "clorophyll",
     apply: (context) => {
@@ -109,23 +114,7 @@ export const abilityRules: AbilityRule[] = [
         context.target.ability === "clorophyll" &&
         context.weather === "sun"
       )
-        return {
-          ...context,
-          user: {
-            ...context.user,
-            stats: {
-              ...context.user.stats,
-              Speed: context.user.stats.Speed * 2,
-            },
-          },
-          target: {
-            ...context.target,
-            stats: {
-              ...context.target.stats,
-              Speed: context.target.stats.Speed * 2,
-            },
-          },
-        };
+        return context; /* tecnically not correct but it doesn't influence calc and avoid double call problem */
       if (context.user.ability === "clorophyll" && context.weather === "sun")
         return {
           ...context,
@@ -148,6 +137,128 @@ export const abilityRules: AbilityRule[] = [
             },
           },
         };
+      return context;
+    },
+  },
+  {
+    ability: "comatose",
+    apply: (context) => {
+      let newContext = context;
+      if (context.user.ability === "comatose") {
+        newContext = {
+          ...newContext,
+          user: { ...newContext.user, status: "sleep" },
+        };
+      }
+      if (context.target.ability === "comatose") {
+        newContext = {
+          ...newContext,
+          target: { ...newContext.target, status: "sleep" },
+        };
+      }
+      return newContext;
+    },
+  },
+  {
+    ability: "dark-aura",
+    apply: (context) => {
+      return { ...context, "dark-aura": true };
+    },
+  },
+  {
+    ability: "dazzling",
+    apply: (context) => {
+      if (context.target.ability === "dazzling")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "*** Moves with priority are uneffective ***",
+          ],
+        };
+      return context;
+    },
+  },
+  /* {
+    ability: "delta-stream",
+    apply: (context) => {
+      if (context.weather !== "desolate-land" && context.weather !== "primordial-sea")
+        return { ...context, weather: "delta-stream" };
+      return context;
+    },
+  },
+  {
+    ability: "desolate-land",
+    apply: (context) => {
+      if (context.weather !== "delta-stream" && context.weather !== "primordial-sea")
+        return { ...context, weather: "desolate-land" };
+      return context;
+    },
+  }, */
+  {
+    ability: "dragons-maw",
+    apply: (context) => {
+      if (
+        context.user.ability === "dragons-maw" &&
+        context.move.type === "dragon"
+      )
+        return {
+          ...context,
+          userAbilityModifier: 1.5,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "earth-eater",
+    apply: (context) => {
+      if (
+        context.target.ability === "earth-eater" &&
+        context.move.type === "ground"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "Opponent immune to ground type moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "electromorphosis",
+    apply: (context) => {
+      if (context.target.ability === "electromorphosis")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "If hit next electric type move has double power",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "fairy-aura",
+    apply: (context) => {
+      return { ...context, "fairy-aura": true };
+    },
+  },
+  {
+    ability: "filter",
+    apply: (context) => {
+      if (context.target.ability === "filter" && context.effectiveness > 1)
+        return {
+          ...context,
+          effectiveness: Math.max(1, context.effectiveness * (3072 / 4096)),
+        };
+      return context;
+    },
+  },
+  {
+    ability: "flare-boost",
+    apply: (context) => {
+      if (context.user.ability === "flare-boost" && context.user.status === "burn" && context.move.category === "special") return {...context, move:{...context.move, power:Math.floor(context.move.power!*1.5)}};
       return context;
     },
   },

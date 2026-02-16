@@ -50,19 +50,24 @@ export interface Context {
   pureDamage?: number;
   additionalType?: string;
   ignoreWeather?: boolean;
-  ignoresAbility?: boolean;
+  ignoresAbility?: boolean;  /* TODO verify which ability to ignore */
   moveMultiplier?: number;
   maxPower?:number;
   notes: string[];
   disabled?: boolean;
-  crit?:boolean;
+  crit?: boolean;
 
-  "neutralizing-gas"?:boolean;
+  "neutralizing-gas"?: boolean;
+  "dark-aura"?: boolean;
+  "fairy-aura"?: boolean;
+  "aura-break"?: boolean;
   userAbilityModifier?: number;
   targetAbilityModifier?: number;
 
+  /* TODO desolate-land, delta-stream, primordial-sea in weather */
   weather?: string;
   terrain?: string;
 
   STAB?: number;
+  effectiveness:number;
 }
