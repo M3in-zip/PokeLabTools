@@ -53,8 +53,8 @@ export const abilityRules: AbilityRule[] = [
           move: {
             ...context.move,
             type: "flying",
-            power: Math.floor(context.move.power! * 1.2),
           },
+          userAbilityModifier: 1.2,
         };
       return context;
     },
@@ -144,6 +144,13 @@ export const abilityRules: AbilityRule[] = [
     ability: "comatose",
     apply: (context) => {
       let newContext = context;
+      if (context.user.ability === "comatose" && context.target.ability === "comatose") {
+        newContext = {
+          ...newContext,
+          user: { ...newContext.user, status: "sleep" },
+          target: { ...newContext.target, status: "sleep" },
+        };
+      }
       if (context.user.ability === "comatose") {
         newContext = {
           ...newContext,
@@ -173,7 +180,7 @@ export const abilityRules: AbilityRule[] = [
           ...context,
           notes: [
             ...context.notes,
-            "*** Moves with priority are uneffective ***",
+            "Moves with priority are uneffective",
           ],
         };
       return context;
@@ -259,6 +266,16 @@ export const abilityRules: AbilityRule[] = [
     ability: "flare-boost",
     apply: (context) => {
       if (context.user.ability === "flare-boost" && context.user.status === "burn" && context.move.category === "special") return {...context, move:{...context.move, power:Math.floor(context.move.power!*1.5)}};
+      return context;
+    },
+  },
+  {
+    ability: "fluffy",
+    apply: (context) => {
+      let multiplier = 1;
+      if (context.move.type === "fire") multiplier = multiplier*2;
+      if (context.move.category === "physical") multiplier = multiplier * 0.5;
+      if (context.target.ability === "fluffy" && multiplier !== 1) return {...context, targetAbilityModifier:multiplier};
       return context;
     },
   },
