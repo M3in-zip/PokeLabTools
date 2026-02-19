@@ -57,10 +57,18 @@ export interface Context {
   disabled?: boolean;
   crit?: boolean;
 
+  /* TODO consider these in the formula, to decide how to apply to user, target or both (ex friend guard) probably make
+   a double check and pass to context a boolean only for the user or target, based on the ability (ex. friend guard target)*/
   "neutralizing-gas"?: boolean;
   "dark-aura"?: boolean;
   "fairy-aura"?: boolean;
   "aura-break"?: boolean;
+  "friend-guard"?: boolean;
+  "battery"?: boolean;
+  "beads-of-ruin"?: boolean;
+  "cloud-nine"?: boolean;
+  "air-lock"?: boolean;
+
   userAbilityModifier?: number;
   targetAbilityModifier?: number;
 
@@ -71,3 +79,5 @@ export interface Context {
   STAB?: number;
   effectiveness:number;
 }
+
+/* TODO flower gift, booosts atk and sp. def of user and allies in sun */

@@ -34,13 +34,14 @@ const bulletproofIgnores: string[] = [
   "zap-cannon",
 ];
 
-/* TODO check neutralizing-gas before using this vector, check air-lock, aura-break dark-aura fairy-aura, battery, beads-of-ruin, cloud-nine */
+/* TODO check neutralizing-gas before using this vector */
 export const abilityRules: AbilityRule[] = [
   {
     ability: "adaptability",
     apply: (context) => {
       const isStab = context.user.type.includes(context.move.type);
-      if (isStab) return { ...context, STAB: 2 };
+      if (context.user.ability === "adaptability" && isStab)
+        return { ...context, STAB: 2 };
       return context;
     },
   },
@@ -144,7 +145,10 @@ export const abilityRules: AbilityRule[] = [
     ability: "comatose",
     apply: (context) => {
       let newContext = context;
-      if (context.user.ability === "comatose" && context.target.ability === "comatose") {
+      if (
+        context.user.ability === "comatose" &&
+        context.target.ability === "comatose"
+      ) {
         newContext = {
           ...newContext,
           user: { ...newContext.user, status: "sleep" },
@@ -178,10 +182,7 @@ export const abilityRules: AbilityRule[] = [
       if (context.target.ability === "dazzling")
         return {
           ...context,
-          notes: [
-            ...context.notes,
-            "Moves with priority are uneffective",
-          ],
+          notes: [...context.notes, "Moves with priority are uneffective"],
         };
       return context;
     },
@@ -265,7 +266,18 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "flare-boost",
     apply: (context) => {
-      if (context.user.ability === "flare-boost" && context.user.status === "burn" && context.move.category === "special") return {...context, move:{...context.move, power:Math.floor(context.move.power!*1.5)}};
+      if (
+        context.user.ability === "flare-boost" &&
+        context.user.status === "burn" &&
+        context.move.category === "special"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.5),
+          },
+        };
       return context;
     },
   },
@@ -273,9 +285,180 @@ export const abilityRules: AbilityRule[] = [
     ability: "fluffy",
     apply: (context) => {
       let multiplier = 1;
-      if (context.move.type === "fire") multiplier = multiplier*2;
+      if (context.move.type === "fire") multiplier = multiplier * 2;
       if (context.move.category === "physical") multiplier = multiplier * 0.5;
-      if (context.target.ability === "fluffy" && multiplier !== 1) return {...context, targetAbilityModifier:multiplier};
+      if (context.target.ability === "fluffy" && multiplier !== 1)
+        return { ...context, targetAbilityModifier: multiplier };
+      return context;
+    },
+  },
+  {
+    ability: "forecast",
+    apply: (context) => {
+      const weatherTypeMap: Record<string, string> = {
+        sun: "fire",
+        rain: "water",
+        sand: "rock",
+        snow: "ice",
+      };
+      const weather = context.weather ? context.weather : undefined;
+      const type = weather ? (weatherTypeMap[weather] ?? "normal") : "normal";
+      if (
+        context.user.ability === "forecast" &&
+        context.target.ability === "forecast"
+      )
+        return {
+          ...context,
+          user: { ...context.user, type: [type] },
+          target: { ...context.target, type: [type] },
+        };
+      if (context.user.ability === "forecast")
+        return { ...context, user: { ...context.user, type: [type] } };
+      if (context.target.ability === "forecast")
+        return { ...context, target: { ...context.target, type: [type] } };
+      return context;
+    },
+  },
+  {
+    ability: "fur-coat",
+    apply: (context) => {
+      if (context.target.ability === "fur-coat")
+        return {
+          ...context,
+          target: {
+            ...context.target,
+            stats: {
+              ...context.target.stats,
+              Def: context.target.stats.Def * 2,
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "gale-wings",
+    apply: (context) => {
+      if (
+        context.user.ability === "gale-wings" &&
+        context.move.type === "flying"
+      )
+        return {
+          ...context,
+          move: { ...context.move, priority: context.move.priority + 1 },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "galvanize",
+    apply: (context) => {
+      if (
+        context.user.ability === "galvanize" &&
+        context.move.type === "normal"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            type: "electric",
+            power: Math.floor(context.move.power! * 1.2),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "gorilla-tactics",
+    apply: (context) => {
+      if (context.user.ability === "gorilla-tactics")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+            },
+          },
+          notes: [
+            ...context.notes,
+            "Gorilla tactics boosts attack but locks the pokemon in the first move used",
+          ],
+        };
+      return context;
+    },
+  },
+  /* not handled too specific case */
+  {
+    ability: "grass-pelt",
+    apply: (context) => {
+      if (
+        context.target.ability === "grass-pelt" &&
+        context.terrain === "grassy" &&
+        context.user.ability !== "grass-pelt"
+      )
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "This case is not handled (both pokemon having grass-pelt), sorry for the inconvenience",
+          ],
+        };
+      if (
+        context.target.ability === "grass-pelt" &&
+        context.terrain === "grassy"
+      )
+        return {
+          ...context,
+          target: {
+            ...context.target,
+            stats: {
+              ...context.target.stats,
+              Def: Math.floor(context.target.stats.Def * 1.5),
+            },
+          },
+        };
+      if (context.user.ability === "grass-pelt" && context.terrain === "grassy")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Def: Math.floor(context.user.stats.Def * 1.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "guts",
+    apply: (context) => {
+      if (context.user.ability === "guts" && context.target.ability === "guts" && context.user.status && context.target.status) return {...context, notes: [...context.notes, "Both pokemon have guts and a status condition, sorry for the inconvenience"]};
+      if (context.user.ability === "guts" && context.user.status)
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+            },
+          },
+        };
+      if (context.target.ability === "guts" && context.target.status)
+        return {
+          ...context,
+          target: {
+            ...context.target,
+            stats: {
+              ...context.target.stats,
+              Atk: Math.floor(context.target.stats.Atk * 1.5),
+            },
+          },
+        };
       return context;
     },
   },
