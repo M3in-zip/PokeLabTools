@@ -582,7 +582,6 @@ export const moveRules: MoveRule[] = [
       const weatherTypeMap: Record<string, string> = {
         sun: "fire",
         rain: "water",
-        sand: "rock",
         snow: "ice",
       };
       const weather = context.weather? context.weather : undefined;

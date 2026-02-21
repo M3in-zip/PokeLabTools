@@ -1,4 +1,4 @@
-import type { Context } from "@/types/pokemon";
+import type { Context, Pokemon } from "@/types/pokemon";
 
 export interface AbilityRule {
   ability: string;
@@ -74,7 +74,7 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "armor-tail",
     apply: (context) => {
-      if (context.user.ability === "armor-tail")
+      if (context.target.ability === "armor-tail")
         return {
           ...context,
           notes: [...context.notes, "Armor tail prevents priority moves"],
@@ -108,15 +108,31 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability: "clorophyll",
+    ability: "chlorophyll",
     apply: (context) => {
       if (
-        context.user.ability === "clorophyll" &&
-        context.target.ability === "clorophyll" &&
+        context.user.ability === "chlorophyll" &&
+        context.target.ability === "chlorophyll" &&
         context.weather === "sun"
       )
-        return context; /* tecnically not correct but it doesn't influence calc and avoid double call problem */
-      if (context.user.ability === "clorophyll" && context.weather === "sun")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Speed: context.user.stats.Speed * 2,
+            },
+          },
+          target: {
+            ...context.target,
+            stats: {
+              ...context.target.stats,
+              Speed: context.target.stats.Speed * 2,
+            },
+          },
+        };
+      if (context.user.ability === "chlorophyll" && context.weather === "sun")
         return {
           ...context,
           user: {
@@ -127,7 +143,7 @@ export const abilityRules: AbilityRule[] = [
             },
           },
         };
-      if (context.target.ability === "clorophyll" && context.weather === "sun")
+      if (context.target.ability === "chlorophyll" && context.weather === "sun")
         return {
           ...context,
           target: {
@@ -144,30 +160,16 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "comatose",
     apply: (context) => {
-      let newContext = context;
-      if (
-        context.user.ability === "comatose" &&
-        context.target.ability === "comatose"
-      ) {
-        newContext = {
-          ...newContext,
-          user: { ...newContext.user, status: "sleep" },
-          target: { ...newContext.target, status: "sleep" },
-        };
-      }
-      if (context.user.ability === "comatose") {
-        newContext = {
-          ...newContext,
-          user: { ...newContext.user, status: "sleep" },
-        };
-      }
-      if (context.target.ability === "comatose") {
-        newContext = {
-          ...newContext,
-          target: { ...newContext.target, status: "sleep" },
-        };
-      }
-      return newContext;
+      const applyComatose = (pokemon: Pokemon) : Pokemon =>
+      pokemon.ability === "comatose"
+        ? { ...pokemon, status: "sleep" }
+        : pokemon;
+
+    return {
+      ...context,
+      user: applyComatose(context.user),
+      target: applyComatose(context.target),
+    };
     },
   },
   {
@@ -182,27 +184,11 @@ export const abilityRules: AbilityRule[] = [
       if (context.target.ability === "dazzling")
         return {
           ...context,
-          notes: [...context.notes, "Moves with priority are uneffective"],
+          notes: [...context.notes, "Dazzling prevents priority moves"],
         };
       return context;
     },
   },
-  /* {
-    ability: "delta-stream",
-    apply: (context) => {
-      if (context.weather !== "desolate-land" && context.weather !== "primordial-sea")
-        return { ...context, weather: "delta-stream" };
-      return context;
-    },
-  },
-  {
-    ability: "desolate-land",
-    apply: (context) => {
-      if (context.weather !== "delta-stream" && context.weather !== "primordial-sea")
-        return { ...context, weather: "desolate-land" };
-      return context;
-    },
-  }, */
   {
     ability: "dragons-maw",
     apply: (context) => {
@@ -240,7 +226,7 @@ export const abilityRules: AbilityRule[] = [
           ...context,
           notes: [
             ...context.notes,
-            "If hit next electric type move has double power",
+            "If hit get charged, when charged next electric type move has double power and lose the charge",
           ],
         };
       return context;
@@ -298,7 +284,6 @@ export const abilityRules: AbilityRule[] = [
       const weatherTypeMap: Record<string, string> = {
         sun: "fire",
         rain: "water",
-        sand: "rock",
         snow: "ice",
       };
       const weather = context.weather ? context.weather : undefined;
@@ -389,7 +374,6 @@ export const abilityRules: AbilityRule[] = [
       return context;
     },
   },
-  /* not handled too specific case */
   {
     ability: "grass-pelt",
     apply: (context) => {
