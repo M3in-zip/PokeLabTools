@@ -160,16 +160,16 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "comatose",
     apply: (context) => {
-      const applyComatose = (pokemon: Pokemon) : Pokemon =>
-      pokemon.ability === "comatose"
-        ? { ...pokemon, status: "sleep" }
-        : pokemon;
+      const applyComatose = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "comatose"
+          ? { ...pokemon, status: "sleep" }
+          : pokemon;
 
-    return {
-      ...context,
-      user: applyComatose(context.user),
-      target: applyComatose(context.target),
-    };
+      return {
+        ...context,
+        user: applyComatose(context.user),
+        target: applyComatose(context.target),
+      };
     },
   },
   {
@@ -377,73 +377,63 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "grass-pelt",
     apply: (context) => {
-      if (
-        context.target.ability === "grass-pelt" &&
-        context.terrain === "grassy" &&
-        context.user.ability !== "grass-pelt"
-      )
-        return {
-          ...context,
-          notes: [
-            ...context.notes,
-            "This case is not handled (both pokemon having grass-pelt), sorry for the inconvenience",
-          ],
-        };
-      if (
-        context.target.ability === "grass-pelt" &&
-        context.terrain === "grassy"
-      )
-        return {
-          ...context,
-          target: {
-            ...context.target,
-            stats: {
-              ...context.target.stats,
-              Def: Math.floor(context.target.stats.Def * 1.5),
-            },
-          },
-        };
-      if (context.user.ability === "grass-pelt" && context.terrain === "grassy")
-        return {
-          ...context,
-          user: {
-            ...context.user,
-            stats: {
-              ...context.user.stats,
-              Def: Math.floor(context.user.stats.Def * 1.5),
-            },
-          },
-        };
-      return context;
+      if (context.terrain !== "grassy") return context;
+
+      const boost = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "grass-pelt"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Def: Math.floor(pokemon.stats.Def * 1.5),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: boost(context.user),
+        target: boost(context.target),
+      };
     },
   },
   {
     ability: "guts",
     apply: (context) => {
-      if (context.user.ability === "guts" && context.target.ability === "guts" && context.user.status && context.target.status) return {...context, notes: [...context.notes, "Both pokemon have guts and a status condition, sorry for the inconvenience"]};
-      if (context.user.ability === "guts" && context.user.status)
+      const boost = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "guts" && pokemon.status
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Atk: Math.floor(pokemon.stats.Atk * 1.5),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: boost(context.user),
+        target: boost(context.target),
+      };
+    },
+  },
+  {
+    ability: "hadron-engine",
+    apply: (context) => {
+      if (context.user.ability === "hadron-engine")
         return {
           ...context,
           user: {
             ...context.user,
             stats: {
               ...context.user.stats,
-              Atk: Math.floor(context.user.stats.Atk * 1.5),
-            },
-          },
-        };
-      if (context.target.ability === "guts" && context.target.status)
-        return {
-          ...context,
-          target: {
-            ...context.target,
-            stats: {
-              ...context.target.stats,
-              Atk: Math.floor(context.target.stats.Atk * 1.5),
+              Atk: Math.floor(context.user.stats.Atk * 5461/4096),
+              SpA: Math.floor(context.user.stats["Sp. Atk"] * 5461/4096),
             },
           },
         };
       return context;
-    },
-  },
+    }
+  }
 ];
