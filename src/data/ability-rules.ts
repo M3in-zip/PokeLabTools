@@ -1,4 +1,5 @@
 import type { Context, Pokemon } from "@/types/pokemon";
+import { useContext } from "react";
 
 export interface AbilityRule {
   ability: string;
@@ -731,4 +732,43 @@ export const abilityRules: AbilityRule[] = [
       return context;
     },
   },
+  {
+    ability:"merciless",
+    apply: (context) => {
+      if (context.user.ability === "merciless" && context.target.status === "poison") 
+        return {...context, crit: true };
+      return context;
+    }
+  },
+  {
+    ability:"mimicry",
+    apply: (context) => {
+      const types: Record<string, string> = {
+        electric: "electric",
+        grassy: "grass",
+        misty: "fairy",
+        psychic: "psychic",
+      }
+
+      const type = types[context.terrain ?? ""] ?? "normal";
+      const applyMimicry = (pokemon: Pokemon): Pokemon => {
+        if (pokemon.ability === "mimicry") {
+          return { ...pokemon, type: [type] };
+        }
+        return pokemon;
+      };
+      return {
+        ...context,
+        user: applyMimicry(context.user),
+        target: applyMimicry(context.target),
+      };
+    }
+  },
+  {
+    ability: "minds-eye",
+    apply: (context) => {
+      if (context.user.ability === "minds-eye") return {...context, "minds-eye": true};
+      return context;
+    }
+  }
 ];

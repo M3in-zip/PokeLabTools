@@ -69,6 +69,7 @@ export interface Context {
   "fairy-aura"?: boolean;
   "aura-break"?: boolean;
   "friend-guard"?: boolean;
+  "minds-eye"?: boolean;
 
   userIgnoresItem?: boolean;
   targetIgnoresItem?: boolean;
