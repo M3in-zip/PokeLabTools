@@ -34,6 +34,58 @@ const bulletproofIgnores: string[] = [
   "zap-cannon",
 ];
 
+const ironFistMoves: string[] = [
+  "bullet-punch",
+  "comet-punch",
+  "dizzy-punch",
+  "double-iron-bash",
+  "drain-punch",
+  "dynamic-punch",
+  "fire-punch",
+  "focus-punch",
+  "hammer-arm",
+  "ice-hammer",
+  "ice-punch",
+  "mach-punch",
+  "mega-punch",
+  "power-up-punch",
+  "shadow-punch",
+  "sky-uppercut",
+  "thunder-punch",
+];
+
+const liquidationMoves: string[] = [
+  "snore",
+  "uproar",
+  "hyper-voice",
+  "bug-buzz",
+  "chatter",
+  "round",
+  "echoed-voice",
+  "relic-song",
+  "snarl",
+  "disarming-voice",
+  "boomburst",
+  "sparkling-aria",
+  "clanging-scales",
+  "clangorous-soulblaze",
+  "clangorous-soul",
+  "overdrive",
+  "eerie-spell",
+  "torch-song",
+  "alluring-voice",
+  "psychic-noise",
+];
+
+const megaLauncherMoves: string[] = [
+  "aura-sphere",
+  "dark-pulse",
+  "dragon-pulse",
+  "heal-pulse",
+  "terrain-pulse",
+  "water-pulse",
+];
+
 /* TODO check neutralizing-gas before using this vector */
 export const abilityRules: AbilityRule[] = [
   {
@@ -529,6 +581,152 @@ export const abilityRules: AbilityRule[] = [
         return {
           ...context,
           targetAbilityModifier: 0.5,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "infiltrator",
+    apply: (context) => {
+      if (context.user.ability === "infiltrator")
+        return {
+          ...context,
+          infiltrator: true,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "insomnia",
+    apply: (context) => {
+      const applyInsomnia = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "insomnia" && pokemon.status === "sleep"
+          ? { ...pokemon, status: undefined }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applyInsomnia(context.user),
+        target: applyInsomnia(context.target),
+      };
+    },
+  },
+  {
+    ability: "iron-fist",
+    apply: (context) => {
+      if (
+        context.user.ability === "iron-fist" &&
+        ironFistMoves.includes(context.move.name)
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.2),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "klutz",
+    apply: (context) => {
+      return {
+        ...context,
+        userIgnoresItem: context.user.ability === "klutz",
+        targetIgnoresItem: context.target.ability === "klutz",
+      };
+    },
+  },
+  {
+    ability: "levitate",
+    apply: (context) => {
+      if (
+        context.target.ability === "levitate" &&
+        context.move.type === "ground"
+      )
+        return { ...context, pureDamage: 0 };
+      return context;
+    },
+  },
+  {
+    ability: "light-metal",
+    apply: (context) => {
+      const applyLightMetal = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "light-metal"
+          ? {
+              ...pokemon,
+              weight: Math.floor(pokemon.weight * 0.5),
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applyLightMetal(context.user),
+        target: applyLightMetal(context.target),
+      };
+    },
+  },
+  {
+    ability: "lightning-rod",
+    apply: (context) => {
+      if (
+        context.target.ability === "lightning-rod" &&
+        context.move.type === "electric"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "Opponent immune to electric type moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "limber",
+    apply: (context) => {
+      const applyLimber = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "limber" && pokemon.status === "paralysis"
+          ? { ...pokemon, status: undefined }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applyLimber(context.user),
+        target: applyLimber(context.target),
+      };
+    },
+  },
+  {
+    ability: "liquid-voice",
+    apply: (context) => {
+      if (
+        context.user.ability === "liquid-voice" &&
+        liquidationMoves.includes(context.move.name)
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            type: "water",
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "mega-launcher",
+    apply: (context) => {
+      if (
+        context.user.ability === "mega-launcher" &&
+        megaLauncherMoves.includes(context.move.name)
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.5),
+          },
         };
       return context;
     },

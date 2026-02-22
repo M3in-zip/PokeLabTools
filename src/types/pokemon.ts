@@ -16,7 +16,7 @@ export interface Pokemon {
   type: string[];
   weight: number;
   ability: string;
-  status?: "burn" | "freeze" | "paralysis" | "poison" | "sleep";
+  status?: "burn" | "freeze" | "paralysis" | "poison" | "sleep" | undefined;
 }
 
 export interface PokemonMove {
@@ -60,14 +60,18 @@ export interface Context {
   /* TODO consider these in the formula, to decide how to apply to user, target or both (ex friend guard) probably make
    a double check and pass to context a boolean only for the user or target, based on the ability (ex. friend guard target)*/
   "neutralizing-gas"?: boolean;
+  "air-lock"?: boolean;
+  "cloud-nine"?: boolean;
+  battery?: boolean;
+  "beads-of-ruin"?: boolean;
+  infiltrator?: boolean;
   "dark-aura"?: boolean;
   "fairy-aura"?: boolean;
   "aura-break"?: boolean;
   "friend-guard"?: boolean;
-  "battery"?: boolean;
-  "beads-of-ruin"?: boolean;
-  "cloud-nine"?: boolean;
-  "air-lock"?: boolean;
+
+  userIgnoresItem?: boolean;
+  targetIgnoresItem?: boolean;
 
   userAbilityModifier?: number;
   targetAbilityModifier?: number;
