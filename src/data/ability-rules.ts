@@ -46,6 +46,12 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
+    ability: "air-lock",
+    apply: (context) => {
+      return { ...context, "air-lock": true };
+    },
+  },
+  {
     ability: "aerilate",
     apply: (context) => {
       if (context.user.ability === "aerilate" && context.move.type === "normal")
@@ -155,6 +161,12 @@ export const abilityRules: AbilityRule[] = [
           },
         };
       return context;
+    },
+  },
+  {
+    ability: "cloud-nine",
+    apply: (context) => {
+      return { ...context, "cloud-nine": true };
     },
   },
   {
@@ -379,7 +391,7 @@ export const abilityRules: AbilityRule[] = [
     apply: (context) => {
       if (context.terrain !== "grassy") return context;
 
-      const boost = (pokemon: Pokemon): Pokemon =>
+      const applyGrassPeltDefense = (pokemon: Pokemon): Pokemon =>
         pokemon.ability === "grass-pelt"
           ? {
               ...pokemon,
@@ -392,15 +404,15 @@ export const abilityRules: AbilityRule[] = [
 
       return {
         ...context,
-        user: boost(context.user),
-        target: boost(context.target),
+        user: applyGrassPeltDefense(context.user),
+        target: applyGrassPeltDefense(context.target),
       };
     },
   },
   {
     ability: "guts",
     apply: (context) => {
-      const boost = (pokemon: Pokemon): Pokemon =>
+      const applyGutsAttack = (pokemon: Pokemon): Pokemon =>
         pokemon.ability === "guts" && pokemon.status
           ? {
               ...pokemon,
@@ -413,27 +425,44 @@ export const abilityRules: AbilityRule[] = [
 
       return {
         ...context,
-        user: boost(context.user),
-        target: boost(context.target),
+        user: applyGutsAttack(context.user),
+        target: applyGutsAttack(context.target),
       };
     },
   },
   {
     ability: "hadron-engine",
     apply: (context) => {
-      if (context.user.ability === "hadron-engine")
+      if (context.user.ability === "hadron-engine" && context.terrain === "electric")
         return {
           ...context,
           user: {
             ...context.user,
             stats: {
               ...context.user.stats,
-              Atk: Math.floor(context.user.stats.Atk * 5461/4096),
-              SpA: Math.floor(context.user.stats["Sp. Atk"] * 5461/4096),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 5461/4096),
             },
           },
         };
       return context;
     }
-  }
+  },
+  {
+    ability: "heat-proof",
+    apply: (context) => {
+      if (context.target.ability === "heat-proof" && context.move.type === "fire")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 0.5),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 0.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
 ];
