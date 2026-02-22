@@ -433,24 +433,32 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "hadron-engine",
     apply: (context) => {
-      if (context.user.ability === "hadron-engine" && context.terrain === "electric")
+      if (
+        context.user.ability === "hadron-engine" &&
+        context.terrain === "electric"
+      )
         return {
           ...context,
           user: {
             ...context.user,
             stats: {
               ...context.user.stats,
-              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 5461/4096),
+              "Sp. Atk": Math.floor(
+                (context.user.stats["Sp. Atk"] * 5461) / 4096,
+              ),
             },
           },
         };
       return context;
-    }
+    },
   },
   {
     ability: "heat-proof",
     apply: (context) => {
-      if (context.target.ability === "heat-proof" && context.move.type === "fire")
+      if (
+        context.target.ability === "heat-proof" &&
+        context.move.type === "fire"
+      )
         return {
           ...context,
           user: {
@@ -461,6 +469,66 @@ export const abilityRules: AbilityRule[] = [
               "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 0.5),
             },
           },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "heavy-metal",
+    apply: (context) => {
+      const applyHeavyMetal = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "grass-pelt"
+          ? {
+              ...pokemon,
+              weight: pokemon.weight * 2,
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applyHeavyMetal(context.user),
+        target: applyHeavyMetal(context.target),
+      };
+    },
+  },
+  {
+    ability: "huge-power",
+    apply: (context) => {
+      if (context.user.ability === "huge-power")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: { ...context.user.stats, Atk: context.user.stats.Atk * 2 },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "hustle",
+    apply: (context) => {
+      if (context.user.ability === "hustle")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "ice-scales",
+    apply: (context) => {
+      if (context.target.ability === "ice-scales")
+        return {
+          ...context,
+          targetAbilityModifier: 0.5,
         };
       return context;
     },
