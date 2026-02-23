@@ -88,6 +88,78 @@ const megaLauncherMoves: string[] = [
 ];
 
 /* TODO check neutralizing-gas before using this vector */
+
+const moldBreakerIgnores: string[] = [
+  "Aroma-Veil",
+  "Battle-Armor",
+  "Big-Pecks",
+  "Bulletproof",
+  "Clear-Body",
+  "Contrary",
+  "Damp",
+  "Dazzling",
+  "Disguise",
+  "Dry-Skin",
+  "Filter",
+  "Flash-Fire",
+  "Flower-Gift",
+  "Flower-Veil",
+  "Fluffy",
+  "Friend-Guard", /* TODO handle */
+  "Fur-Coat",
+  "Heatproof",
+  "Heavy-Metal",
+  "Hyper-Cutter",
+  "Immunity",
+  "Inner-Focus",
+  "Insomnia",
+  "Keen-Eye",
+  "Leaf-Guard",
+  "Levitate",
+  "Light-Metal",
+  "Lightning-rod",
+  "Limber",
+  "Magic-Bounce",
+  "Magma-Armor",
+  "Marvel-Scale",
+  "Motor-Drive",
+  "Multiscale",
+  "Oblivious",
+  "Overcoat",
+  "Own-Tempo",
+  "Queenly-Majesty",
+  "Sand-Veil",
+  "Sap-Sipper",
+  "Shell-Armor",
+  "Shield-Dust",
+  "Simple",
+  "Snow-Cloak",
+  "Solid-Rock",
+  "Soundproof",
+  "Sticky-Hold",
+  "Storm-Drain",
+  "Sturdy",
+  "Suction-Cups",
+  "Sweet-Veil",
+  "Tangled-Feet",
+  "Telepathy",
+  "Thick-Fat",
+  "Unaware",
+  "Vital-Spirit",
+  "Volt-Absorb",
+  "Water-Absorb",
+  "Water-Bubble",
+  "Water-Veil",
+  "White-Smoke",
+  "Wonder-Guard",
+  "Wonder-Skin"
+];
+
+export const moldBreakerCheck = (userAbility: string, targetAbility: string) => {
+  if (userAbility !== "mold-breaker") return false;
+  return moldBreakerIgnores.includes(targetAbility);
+};
+
 export const abilityRules: AbilityRule[] = [
   {
     ability: "adaptability",
@@ -770,5 +842,19 @@ export const abilityRules: AbilityRule[] = [
       if (context.user.ability === "minds-eye") return {...context, "minds-eye": true};
       return context;
     }
-  }
+  },
+  {
+    ability: "multiscale",
+    apply: (context) => {
+      if (context.user.ability === "multiscale") return {...context, notes: [...context.notes, "Multiscale reduces damage by half if at full HP"]};
+      return context;
+    }
+  },
+  {
+    ability: "neuroforce",
+    apply: (context) => {
+      if (context.user.ability === "neuroforce" && context.effectiveness>1) return {...context, userAbilityModifier: 1.25};
+      return context;
+    }
+  },
 ];
