@@ -62,15 +62,18 @@ export interface Context {
   "neutralizing-gas"?: boolean;
   "air-lock"?: boolean;
   "cloud-nine"?: boolean;
-  battery?: boolean;
-  "beads-of-ruin"?: boolean;
-  infiltrator?: boolean;
   "dark-aura"?: boolean;
   "fairy-aura"?: boolean;
   "aura-break"?: boolean;
+  
+  /* abilities to check on both */
+  battery?: boolean;
+  "beads-of-ruin"?: boolean;
   "friend-guard"?: boolean;
+  infiltrator?: boolean;
   "minds-eye"?: boolean;
-
+  "power-spot"?: boolean; //checkbox
+  
   userIgnoresItem?: boolean;
   targetIgnoresItem?: boolean;
 

@@ -857,4 +857,39 @@ export const abilityRules: AbilityRule[] = [
       return context;
     }
   },
+  {
+    ability: "normalize",
+    apply: (context) => {
+      if (context.user.ability === "normalize") return {...context, move: {...context.move, type: "normal"}};
+      return context;
+    }
+  },
+  {
+    ability: "orichalcum-pulse",
+    apply: (context) => {
+      if (context.user.ability === "orichalcum-pulse" && context.weather === "sun") return {...context, user: {...context.user, stats: {...context.user.stats, Atk: Math.floor(context.user.stats.Atk * 5461/4096)}}};
+      return context;
+    }
+  },
+  {
+    ability: "parental-bond",
+    apply: (context) => {
+      if (context.user.ability === "parental-bond" && context.effectiveness>1) return {...context, userAbilityModifier: 1.25};
+      return context;
+    }
+  },
+  {
+    ability: "pixilate",
+    apply: (context) => {
+      if (context.user.ability === "pixilate" && context.move.type === "normal") return {...context, move: {...context.move, type: "fairy"}};
+      return context;
+    }
+  },
+  {
+    ability: "prism-armor",
+    apply: (context) => {
+      if (context.user.ability === "prism-armor") return {...context, notes: [...context.notes, "Prism Armor reduces damage by 25%"]};
+      return context;
+    }
+  },
 ];
