@@ -88,6 +88,7 @@ const megaLauncherMoves: string[] = [
 ];
 
 /* TODO check neutralizing-gas before using this vector */
+/* TODO check effectiveness when abilities change move types before other abilities*/
 
 const moldBreakerIgnores: string[] = [
   "Aroma-Veil",
@@ -155,10 +156,102 @@ const moldBreakerIgnores: string[] = [
   "Wonder-Skin"
 ];
 
+const punkRockAffects: string[] = [
+  "boomburst",
+  "hyper-voice",
+  "overdrive",
+  "psychic-noise",
+  "round",
+  "snarl",
+  "snore",
+  "uproar",
+  "alluring-voice",
+  "bug-buzz",
+  "clanging-scales",
+  "disarming-voice",
+  "echoed-voice",
+  "relic-song",
+  "eerie-spell",
+  "sparkling-aria",
+  "torch-song",
+];
+
+export const neutralizingGasCheck = (userAbility: string, targetAbility: string) => {
+  if (userAbility !== "neutralizing-gas" && targetAbility !== "neutralizing-gas") return false;
+  return true;
+}
+
 export const moldBreakerCheck = (userAbility: string, targetAbility: string) => {
   if (userAbility !== "mold-breaker") return false;
   return moldBreakerIgnores.includes(targetAbility);
 };
+
+export const abilityRulesInfluenceMoveType: AbilityRule[] = [
+  {
+    ability: "aerilate",
+    apply: (context) => {
+      if (context.user.ability === "aerilate" && context.move.type === "normal")
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            type: "flying",
+          },
+          userAbilityModifier: 1.2,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "galvanize",
+    apply: (context) => {
+      if (
+        context.user.ability === "galvanize" &&
+        context.move.type === "normal"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            type: "electric",
+            power: Math.floor(context.move.power! * 1.2),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "liquid-voice",
+    apply: (context) => {
+      if (
+        context.user.ability === "liquid-voice" &&
+        liquidationMoves.includes(context.move.name)
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            type: "water",
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "normalize",
+    apply: (context) => {
+      if (context.user.ability === "normalize") return {...context, move: {...context.move, type: "normal"}};
+      return context;
+    }
+  },
+  {
+    ability: "pixilate",
+    apply: (context) => {
+      if (context.user.ability === "pixilate" && context.move.type === "normal") return {...context, move: {...context.move, type: "fairy"}};
+      return context;
+    }
+  },
+];
 
 export const abilityRules: AbilityRule[] = [
   {
@@ -174,21 +267,6 @@ export const abilityRules: AbilityRule[] = [
     ability: "air-lock",
     apply: (context) => {
       return { ...context, "air-lock": true };
-    },
-  },
-  {
-    ability: "aerilate",
-    apply: (context) => {
-      if (context.user.ability === "aerilate" && context.move.type === "normal")
-        return {
-          ...context,
-          move: {
-            ...context.move,
-            type: "flying",
-          },
-          userAbilityModifier: 1.2,
-        };
-      return context;
     },
   },
   {
@@ -468,24 +546,6 @@ export const abilityRules: AbilityRule[] = [
         return {
           ...context,
           move: { ...context.move, priority: context.move.priority + 1 },
-        };
-      return context;
-    },
-  },
-  {
-    ability: "galvanize",
-    apply: (context) => {
-      if (
-        context.user.ability === "galvanize" &&
-        context.move.type === "normal"
-      )
-        return {
-          ...context,
-          move: {
-            ...context.move,
-            type: "electric",
-            power: Math.floor(context.move.power! * 1.2),
-          },
         };
       return context;
     },
@@ -771,23 +831,6 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability: "liquid-voice",
-    apply: (context) => {
-      if (
-        context.user.ability === "liquid-voice" &&
-        liquidationMoves.includes(context.move.name)
-      )
-        return {
-          ...context,
-          move: {
-            ...context.move,
-            type: "water",
-          },
-        };
-      return context;
-    },
-  },
-  {
     ability: "mega-launcher",
     apply: (context) => {
       if (
@@ -858,13 +901,6 @@ export const abilityRules: AbilityRule[] = [
     }
   },
   {
-    ability: "normalize",
-    apply: (context) => {
-      if (context.user.ability === "normalize") return {...context, move: {...context.move, type: "normal"}};
-      return context;
-    }
-  },
-  {
     ability: "orichalcum-pulse",
     apply: (context) => {
       if (context.user.ability === "orichalcum-pulse" && context.weather === "sun") return {...context, user: {...context.user, stats: {...context.user.stats, Atk: Math.floor(context.user.stats.Atk * 5461/4096)}}};
@@ -879,16 +915,16 @@ export const abilityRules: AbilityRule[] = [
     }
   },
   {
-    ability: "pixilate",
+    ability: "prism-armor",
     apply: (context) => {
-      if (context.user.ability === "pixilate" && context.move.type === "normal") return {...context, move: {...context.move, type: "fairy"}};
+      if (context.user.ability === "prism-armor" && context.effectiveness > 1) return {...context, notes: [...context.notes, "Prism Armor reduces damage by 25%"]};
       return context;
     }
   },
   {
-    ability: "prism-armor",
+    ability: "punk-rock",
     apply: (context) => {
-      if (context.user.ability === "prism-armor") return {...context, notes: [...context.notes, "Prism Armor reduces damage by 25%"]};
+      /* finish */
       return context;
     }
   },
