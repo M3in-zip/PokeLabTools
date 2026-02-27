@@ -106,7 +106,7 @@ const moldBreakerIgnores: string[] = [
   "Flower-Gift",
   "Flower-Veil",
   "Fluffy",
-  "Friend-Guard", /* TODO handle */
+  "Friend-Guard" /* TODO handle */,
   "Fur-Coat",
   "Heatproof",
   "Heavy-Metal",
@@ -153,7 +153,7 @@ const moldBreakerIgnores: string[] = [
   "Water-Veil",
   "White-Smoke",
   "Wonder-Guard",
-  "Wonder-Skin"
+  "Wonder-Skin",
 ];
 
 const punkRockAffects: string[] = [
@@ -176,12 +176,22 @@ const punkRockAffects: string[] = [
   "torch-song",
 ];
 
-export const neutralizingGasCheck = (userAbility: string, targetAbility: string) => {
-  if (userAbility !== "neutralizing-gas" && targetAbility !== "neutralizing-gas") return false;
+export const neutralizingGasCheck = (
+  userAbility: string,
+  targetAbility: string,
+) => {
+  if (
+    userAbility !== "neutralizing-gas" &&
+    targetAbility !== "neutralizing-gas"
+  )
+    return false;
   return true;
-}
+};
 
-export const moldBreakerCheck = (userAbility: string, targetAbility: string) => {
+export const moldBreakerCheck = (
+  userAbility: string,
+  targetAbility: string,
+) => {
   if (userAbility !== "mold-breaker") return false;
   return moldBreakerIgnores.includes(targetAbility);
 };
@@ -240,16 +250,26 @@ export const abilityRulesInfluenceMoveType: AbilityRule[] = [
   {
     ability: "normalize",
     apply: (context) => {
-      if (context.user.ability === "normalize") return {...context, move: {...context.move, type: "normal"}};
+      if (context.user.ability === "normalize")
+        return { ...context, move: { ...context.move, type: "normal" } };
       return context;
-    }
+    },
   },
   {
     ability: "pixilate",
     apply: (context) => {
-      if (context.user.ability === "pixilate" && context.move.type === "normal") return {...context, move: {...context.move, type: "fairy"}};
+      if (context.user.ability === "pixilate" && context.move.type === "normal")
+        return { ...context, move: { ...context.move, type: "fairy" } };
       return context;
-    }
+    },
+  },
+  {
+    ability: "refrigerate",
+    apply: (context) => {
+      if (context.user.ability === "refrigerate" && context.move.type === "normal")
+        return { ...context, move: { ...context.move, type: "ice" } };
+      return context;
+    },
   },
 ];
 
@@ -848,22 +868,25 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability:"merciless",
+    ability: "merciless",
     apply: (context) => {
-      if (context.user.ability === "merciless" && context.target.status === "poison") 
-        return {...context, crit: true };
+      if (
+        context.user.ability === "merciless" &&
+        context.target.status === "poison"
+      )
+        return { ...context, crit: true };
       return context;
-    }
+    },
   },
   {
-    ability:"mimicry",
+    ability: "mimicry",
     apply: (context) => {
       const types: Record<string, string> = {
         electric: "electric",
         grassy: "grass",
         misty: "fairy",
         psychic: "psychic",
-      }
+      };
 
       const type = types[context.terrain ?? ""] ?? "normal";
       const applyMimicry = (pokemon: Pokemon): Pokemon => {
@@ -877,55 +900,172 @@ export const abilityRules: AbilityRule[] = [
         user: applyMimicry(context.user),
         target: applyMimicry(context.target),
       };
-    }
+    },
   },
   {
     ability: "minds-eye",
     apply: (context) => {
-      if (context.user.ability === "minds-eye") return {...context, "minds-eye": true};
+      if (context.user.ability === "minds-eye")
+        return { ...context, "minds-eye": true };
       return context;
-    }
+    },
   },
   {
     ability: "multiscale",
     apply: (context) => {
-      if (context.user.ability === "multiscale") return {...context, notes: [...context.notes, "Multiscale reduces damage by half if at full HP"]};
+      if (context.user.ability === "multiscale")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "Multiscale reduces damage by half if at full HP",
+          ],
+        };
       return context;
-    }
+    },
   },
   {
     ability: "neuroforce",
     apply: (context) => {
-      if (context.user.ability === "neuroforce" && context.effectiveness>1) return {...context, userAbilityModifier: 1.25};
+      if (context.user.ability === "neuroforce" && context.effectiveness > 1)
+        return { ...context, userAbilityModifier: 1.25 };
       return context;
-    }
+    },
   },
   {
     ability: "orichalcum-pulse",
     apply: (context) => {
-      if (context.user.ability === "orichalcum-pulse" && context.weather === "sun") return {...context, user: {...context.user, stats: {...context.user.stats, Atk: Math.floor(context.user.stats.Atk * 5461/4096)}}};
+      if (
+        context.user.ability === "orichalcum-pulse" &&
+        context.weather === "sun"
+      )
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor((context.user.stats.Atk * 5461) / 4096),
+            },
+          },
+        };
       return context;
-    }
+    },
   },
   {
     ability: "parental-bond",
     apply: (context) => {
-      if (context.user.ability === "parental-bond" && context.effectiveness>1) return {...context, userAbilityModifier: 1.25};
+      if (context.user.ability === "parental-bond" && context.effectiveness > 1)
+        return { ...context, userAbilityModifier: 1.25 };
       return context;
-    }
+    },
   },
   {
     ability: "prism-armor",
     apply: (context) => {
-      if (context.user.ability === "prism-armor" && context.effectiveness > 1) return {...context, notes: [...context.notes, "Prism Armor reduces damage by 25%"]};
+      if (context.user.ability === "prism-armor" && context.effectiveness > 1)
+        return {
+          ...context,
+          notes: [...context.notes, "Prism Armor reduces damage by 25%"],
+        };
       return context;
-    }
+    },
   },
   {
     ability: "punk-rock",
     apply: (context) => {
-      /* finish */
+      const isSoundMove = punkRockAffects.includes(context.move.name);
+      if (!isSoundMove) return context;
+
+      const userHasPunkRock = context.user.ability === "punk-rock";
+      const targetHasPunkRock = context.target.ability === "punk-rock";
+      let newContext = { ...context };
+
+      if (userHasPunkRock)
+        newContext = {
+          ...newContext,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.3),
+          },
+        };
+      if (targetHasPunkRock)
+        newContext = { ...newContext, targetAbilityModifier: 0.5 };
+      return newContext;
+    },
+  },
+  {
+    ability: "pure-power",
+    apply: (context) => {
+      if (context.user.ability === "pure-power")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: { ...context.user.stats, Atk: context.user.stats.Atk * 2 },
+          },
+        };
       return context;
-    }
+    },
+  },
+  {
+    ability: "purifying-salt",
+    apply: (context) => {
+      if (
+        context.target.ability === "purifying-salt" &&
+        context.move.type === "ghost"
+      )
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 0.5),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 0.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "queenly-majesty",
+    apply: (context) => {
+      if (context.target.ability === "queenly-majesty")
+        return {
+          ...context,
+          notes: [...context.notes, "Queenly Majesty prevents priority moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "quick-feet",
+    apply: (context) => {
+      const applyQuickFeet = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "quick-feet" && pokemon.status
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: Math.floor(pokemon.stats.Speed * 1.5),
+              },
+            }
+          : pokemon;
+
+      return {...context, user: applyQuickFeet(context.user), target: applyQuickFeet(context.target)};
+    },
+  },
+  {
+    ability: "reckless",
+    apply: (context) => {
+      if (context.user.ability === "reckless")
+        return {
+          ...context,
+          notes: [...context.notes, "Boosts power of recoil moves by 20%"],
+        };
+      return context;
+    },
   },
 ];
