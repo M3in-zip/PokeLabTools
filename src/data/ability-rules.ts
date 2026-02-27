@@ -266,7 +266,10 @@ export const abilityRulesInfluenceMoveType: AbilityRule[] = [
   {
     ability: "refrigerate",
     apply: (context) => {
-      if (context.user.ability === "refrigerate" && context.move.type === "normal")
+      if (
+        context.user.ability === "refrigerate" &&
+        context.move.type === "normal"
+      )
         return { ...context, move: { ...context.move, type: "ice" } };
       return context;
     },
@@ -1054,7 +1057,11 @@ export const abilityRules: AbilityRule[] = [
             }
           : pokemon;
 
-      return {...context, user: applyQuickFeet(context.user), target: applyQuickFeet(context.target)};
+      return {
+        ...context,
+        user: applyQuickFeet(context.user),
+        target: applyQuickFeet(context.target),
+      };
     },
   },
   {
@@ -1064,6 +1071,41 @@ export const abilityRules: AbilityRule[] = [
         return {
           ...context,
           notes: [...context.notes, "Boosts power of recoil moves by 20%"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "rocky-payload",
+    apply: (context) => {
+      if (
+        context.user.ability === "rocky-payload" &&
+        context.move.type === "rock"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            user: {
+              ...context.user,
+              stats: {
+                ...context.user.stats,
+                Atk: Math.floor(context.user.stats.Atk * 1.5),
+                "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 1.5),
+              },
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "sand-force",
+    apply: (context) => {
+      if (context.user.ability === "sand-force" && context.weather === "sand" && (context.move.type === "ground" || context.move.type === "rock" || context.move.type === "steel"))
+        return {
+          ...context,
+          move: {...context.move, power: Math.floor(context.move.power! * 1.3) },
         };
       return context;
     },
