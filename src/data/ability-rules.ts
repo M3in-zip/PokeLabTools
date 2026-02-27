@@ -340,55 +340,28 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability: "chlorophyll",
-    apply: (context) => {
-      if (
-        context.user.ability === "chlorophyll" &&
-        context.target.ability === "chlorophyll" &&
-        context.weather === "sun"
-      )
-        return {
-          ...context,
-          user: {
-            ...context.user,
+  ability: "chlorophyll",
+  apply: (context) => {
+    if (context.weather !== "sun") return context;
+
+    const applyChlorophyll = (pokemon: Pokemon): Pokemon =>
+      pokemon.ability === "chlorophyll"
+        ? {
+            ...pokemon,
             stats: {
-              ...context.user.stats,
-              Speed: context.user.stats.Speed * 2,
+              ...pokemon.stats,
+              Speed: pokemon.stats.Speed * 2,
             },
-          },
-          target: {
-            ...context.target,
-            stats: {
-              ...context.target.stats,
-              Speed: context.target.stats.Speed * 2,
-            },
-          },
-        };
-      if (context.user.ability === "chlorophyll" && context.weather === "sun")
-        return {
-          ...context,
-          user: {
-            ...context.user,
-            stats: {
-              ...context.user.stats,
-              Speed: context.user.stats.Speed * 2,
-            },
-          },
-        };
-      if (context.target.ability === "chlorophyll" && context.weather === "sun")
-        return {
-          ...context,
-          target: {
-            ...context.target,
-            stats: {
-              ...context.target.stats,
-              Speed: context.target.stats.Speed * 2,
-            },
-          },
-        };
-      return context;
-    },
+          }
+        : pokemon;
+
+    return {
+      ...context,
+      user: applyChlorophyll(context.user),
+      target: applyChlorophyll(context.target),
+    };
   },
+}
   {
     ability: "cloud-nine",
     apply: (context) => {
@@ -482,7 +455,7 @@ export const abilityRules: AbilityRule[] = [
       if (context.target.ability === "filter" && context.effectiveness > 1)
         return {
           ...context,
-          effectiveness: Math.max(1, context.effectiveness * (3072 / 4096)),
+          effectiveness: context.effectiveness * (3072 / 4096),
         };
       return context;
     },
@@ -661,10 +634,10 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability: "heat-proof",
+    ability: "heatproof",
     apply: (context) => {
       if (
-        context.target.ability === "heat-proof" &&
+        context.target.ability === "heatproof" &&
         context.move.type === "fire"
       )
         return {
@@ -685,7 +658,7 @@ export const abilityRules: AbilityRule[] = [
     ability: "heavy-metal",
     apply: (context) => {
       const applyHeavyMetal = (pokemon: Pokemon): Pokemon =>
-        pokemon.ability === "grass-pelt"
+        pokemon.ability === "heavy-metal"
           ? {
               ...pokemon,
               weight: pokemon.weight * 2,
@@ -1084,15 +1057,12 @@ export const abilityRules: AbilityRule[] = [
       )
         return {
           ...context,
-          move: {
-            ...context.move,
-            user: {
-              ...context.user,
-              stats: {
-                ...context.user.stats,
-                Atk: Math.floor(context.user.stats.Atk * 1.5),
-                "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 1.5),
-              },
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 1.5),
             },
           },
         };
@@ -1102,12 +1072,43 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "sand-force",
     apply: (context) => {
-      if (context.user.ability === "sand-force" && context.weather === "sand" && (context.move.type === "ground" || context.move.type === "rock" || context.move.type === "steel"))
-        return {
-          ...context,
-          move: {...context.move, power: Math.floor(context.move.power! * 1.3) },
-        };
-      return context;
+      if (
+        context.user.ability !== "sand-force" ||
+        context.weather !== "sand"
+      )
+        return context;
+
+      const boostedTypes = ["ground", "rock", "steel"];
+      if (!boostedTypes.includes(context.move.type)) return context;
+
+      return {
+        ...context,
+        move: {
+          ...context.move,
+          power: Math.floor(context.move.power! * 1.3),
+        },
+      };
+    },
+  },
+  {
+    ability: "sand-rush",
+    apply: (context) => {
+      const applySandRush = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "sand-rush" && context.weather === "sand"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: Math.floor(pokemon.stats.Speed * 2),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applySandRush(context.user),
+        target: applySandRush(context.target),
+      };
     },
   },
 ];
