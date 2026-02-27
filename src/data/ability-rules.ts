@@ -340,28 +340,28 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-  ability: "chlorophyll",
-  apply: (context) => {
-    if (context.weather !== "sun") return context;
+    ability: "chlorophyll",
+    apply: (context) => {
+      if (context.weather !== "sun") return context;
 
-    const applyChlorophyll = (pokemon: Pokemon): Pokemon =>
-      pokemon.ability === "chlorophyll"
-        ? {
-            ...pokemon,
-            stats: {
-              ...pokemon.stats,
-              Speed: pokemon.stats.Speed * 2,
-            },
-          }
-        : pokemon;
+      const applyChlorophyll = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "chlorophyll"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: pokemon.stats.Speed * 2,
+              },
+            }
+          : pokemon;
 
-    return {
-      ...context,
-      user: applyChlorophyll(context.user),
-      target: applyChlorophyll(context.target),
-    };
+      return {
+        ...context,
+        user: applyChlorophyll(context.user),
+        target: applyChlorophyll(context.target),
+      };
+    },
   },
-}
   {
     ability: "cloud-nine",
     apply: (context) => {
@@ -1072,10 +1072,7 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "sand-force",
     apply: (context) => {
-      if (
-        context.user.ability !== "sand-force" ||
-        context.weather !== "sand"
-      )
+      if (context.user.ability !== "sand-force" || context.weather !== "sand")
         return context;
 
       const boostedTypes = ["ground", "rock", "steel"];
