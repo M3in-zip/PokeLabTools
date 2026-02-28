@@ -1,5 +1,4 @@
 import type { Context, Pokemon } from "@/types/pokemon";
-import { useContext } from "react";
 
 export interface AbilityRule {
   ability: string;
@@ -87,9 +86,6 @@ const megaLauncherMoves: string[] = [
   "water-pulse",
 ];
 
-/* TODO check neutralizing-gas before using this vector */
-/* TODO check effectiveness when abilities change move types before other abilities*/
-
 const moldBreakerIgnores: string[] = [
   "Aroma-Veil",
   "Battle-Armor",
@@ -174,6 +170,37 @@ const punkRockAffects: string[] = [
   "eerie-spell",
   "sparkling-aria",
   "torch-song",
+];
+
+const sharpnessBoosts: string[] = [
+  "aerial-ace",
+  "air-cutter",
+  "air-slash",
+  "aqua-cutter",
+  "ceaseless-edge",
+  "fury-cutter",
+  "leaf-blade",
+  "night-slash",
+  "psycho-cut",
+  "razor-shell",
+  "sacred-sword",
+  "slash",
+  "solar-blade",
+  "stone-axe",
+  "x-scissor",
+];
+
+const strongJawBoosts: string[] = [
+  "bite",
+  "crunch",
+  "fire-fang",
+  "fishious-rend",
+  "hyper-fang",
+  "ice-fang",
+  "jaw-lock",
+  "poison-fang",
+  "psychic-fang",
+  "thunder-fang",
 ];
 
 export const neutralizingGasCheck = (
@@ -1105,6 +1132,232 @@ export const abilityRules: AbilityRule[] = [
         ...context,
         user: applySandRush(context.user),
         target: applySandRush(context.target),
+      };
+    },
+  },
+  {
+    ability: "sap-sipper",
+    apply: (context) => {
+      if (
+        context.target.ability === "sap-sipper" &&
+        context.move.type === "grass"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "Opponent immune to grass type moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "scrappy",
+    apply: (context) => {
+      if (
+        context.user.ability === "scrappy" &&
+        context.target.type.includes("ghost") &&
+        (context.move.type === "normal" || context.move.type === "fighting")
+      )
+        return {
+          ...context,
+          effectiveness: 1,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "screeen-cleaner",
+    apply: (context) => {
+      if (context.user.ability === "screen-cleaner")
+        return {
+          ...context,
+          "light-screen": false,
+          reflect: false,
+          "aurora-veil": false,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "shadow-shield",
+    apply: (context) => {
+      if (context.target.ability === "shadow-shield")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "(shadow-shield) If enemy is at full HP, reduce damage by 50%",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "sharpness",
+    apply: (context) => {
+      if (
+        sharpnessBoosts.includes(context.move.name.toLowerCase()) &&
+        context.user.ability === "sharpness"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.5),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "sheer-force",
+    apply: (context) => {
+      if (context.user.ability === "sheer-force")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "(sheer-force) Boosts power of moves with secondary effects by 30%, but removes those effects",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "shell-armor",
+    apply: (context) => {
+      if (context.target.ability === "shell-armor")
+        return {
+          ...context,
+          crit: false,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "slush-rush",
+    apply: (context) => {
+      const applySlushRush = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "slush-rush" && context.weather === "snow"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: Math.floor(pokemon.stats.Speed * 2),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applySlushRush(context.user),
+        target: applySlushRush(context.target),
+      };
+    },
+  },
+  {
+    ability: "solar-power",
+    apply: (context) => {
+      if (context.user.ability === "solar-power" && context.weather === "sun")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 1.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "solid-rock",
+    apply: (context) => {
+      if (context.target.ability === "solid-rock" && context.effectiveness > 1)
+        return {
+          ...context,
+          effectiveness: context.effectiveness * 0.75,
+          notes: [...context.notes, "(solid-rock) Reduces super-effective damage by 25%"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "soundproof",
+    apply: (context) => {
+      if (context.target.ability === "soundproof" && punkRockAffects.includes(context.move.name))
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "(soundproof) Immune to sound-based moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "steel-worker",
+    apply: (context) => {
+      if (context.user.ability === "steel-worker" && context.move.type === "steel")
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "storm-drain",
+    apply: (context) => {
+      if (context.target.ability === "storm-drain" && context.move.type === "water")
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "(storm-drain) Immune to water moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "strong-jaw",
+    apply: (context) => {
+      if (strongJawBoosts.includes(context.move.name) && context.user.ability === "strong-jaw")
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.5),
+          },
+          notes: [...context.notes, "(strong-jaw) Boosts power of biting moves by 50%"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "surge-surfer",
+    apply: (context) => {
+      const applySurgeSurfer = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "surge-surfer" && context.terrain === "electric"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: Math.floor(pokemon.stats.Speed * 2),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applySurgeSurfer(context.user),
+        target: applySurgeSurfer(context.target),
       };
     },
   },

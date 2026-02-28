@@ -49,16 +49,14 @@ export interface Context {
   hits?: {min:number, max:number};
   pureDamage?: number;
   additionalType?: string;
-  ignoreWeather?: boolean;
-  ignoresAbility?: boolean;  /* TODO verify which ability to ignore */
+  ignoreWeather?: boolean;  /* just ignores effects on move (multipliers on offence) */
+  ignoresAbility?: boolean;  /* TODO verify which ability to ignore (moongeist-beam) */
   moveMultiplier?: number;
-  maxPower?:number;
+  maxPower?:number; /* for moves with multiple damage possibilities like flail, min is move.power, max is maxpow */
   notes: string[];
-  disabled?: boolean;
+  disabled?: boolean; /* if disable ignores calc and print move not available*/
   crit?: boolean;
 
-  /* TODO consider these in the formula, to decide how to apply to user, target or both (ex friend guard) probably make
-   a double check and pass to context a boolean only for the user or target, based on the ability (ex. friend guard target)*/
   "neutralizing-gas"?: boolean;
   "air-lock"?: boolean;
   "cloud-nine"?: boolean;
@@ -73,6 +71,7 @@ export interface Context {
   infiltrator?: boolean;
   "minds-eye"?: boolean;
   "power-spot"?: boolean; //checkbox
+  "steely-spirit"?: boolean;
   
   userIgnoresItem?: boolean;
   targetIgnoresItem?: boolean;
@@ -80,9 +79,14 @@ export interface Context {
   userAbilityModifier?: number;
   targetAbilityModifier?: number;
 
-  /* TODO desolate-land, delta-stream, primordial-sea in weather */
+  /* Generic modifiers, chose by you */
   weather?: string;
   terrain?: string;
+
+  /* screens */
+  "reflect"?: boolean;
+  "light-screen"?: boolean;
+  "aurora-veil"?: boolean;
 
   STAB?: number;
   effectiveness:number;
