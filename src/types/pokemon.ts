@@ -67,9 +67,11 @@ export interface Context {
   /* abilities to check on both */
   battery?: boolean;
   "beads-of-ruin"?: boolean;
+  "sword-of-ruin"?: boolean;
+  "tablets-of-ruin"?: boolean;
+  "vessel-of-ruin"?: boolean;
   "friend-guard"?: boolean;
   infiltrator?: boolean;
-  "minds-eye"?: boolean;
   "power-spot"?: boolean; //checkbox
   "steely-spirit"?: boolean;
   

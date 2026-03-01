@@ -215,11 +215,13 @@ export const neutralizingGasCheck = (
   return true;
 };
 
-export const moldBreakerCheck = (
+const moldBreakerAbilities = ["mold-breaker", "teravolt", "turboblaze"];
+
+export const checkIgnoreAbilities = (
   userAbility: string,
   targetAbility: string,
 ) => {
-  if (userAbility !== "mold-breaker") return false;
+  if (!moldBreakerAbilities.includes(userAbility)) return false;
   return moldBreakerIgnores.includes(targetAbility);
 };
 
@@ -908,8 +910,12 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "minds-eye",
     apply: (context) => {
-      if (context.user.ability === "minds-eye")
-        return { ...context, "minds-eye": true };
+      if (
+        context.user.ability === "minds-eye" &&
+        context.user.type.includes("ghost") &&
+        (context.move.type === "normal" || context.move.type === "fighting")
+      )
+        return { ...context, effectiveness: 1 };
       return context;
     },
   },
@@ -1279,7 +1285,10 @@ export const abilityRules: AbilityRule[] = [
         return {
           ...context,
           effectiveness: context.effectiveness * 0.75,
-          notes: [...context.notes, "(solid-rock) Reduces super-effective damage by 25%"],
+          notes: [
+            ...context.notes,
+            "(solid-rock) Reduces super-effective damage by 25%",
+          ],
         };
       return context;
     },
@@ -1287,7 +1296,10 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "soundproof",
     apply: (context) => {
-      if (context.target.ability === "soundproof" && punkRockAffects.includes(context.move.name))
+      if (
+        context.target.ability === "soundproof" &&
+        punkRockAffects.includes(context.move.name)
+      )
         return {
           ...context,
           pureDamage: 0,
@@ -1299,7 +1311,10 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "steel-worker",
     apply: (context) => {
-      if (context.user.ability === "steel-worker" && context.move.type === "steel")
+      if (
+        context.user.ability === "steel-worker" &&
+        context.move.type === "steel"
+      )
         return {
           ...context,
           user: {
@@ -1316,7 +1331,10 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "storm-drain",
     apply: (context) => {
-      if (context.target.ability === "storm-drain" && context.move.type === "water")
+      if (
+        context.target.ability === "storm-drain" &&
+        context.move.type === "water"
+      )
         return {
           ...context,
           pureDamage: 0,
@@ -1328,14 +1346,20 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "strong-jaw",
     apply: (context) => {
-      if (strongJawBoosts.includes(context.move.name) && context.user.ability === "strong-jaw")
+      if (
+        strongJawBoosts.includes(context.move.name) &&
+        context.user.ability === "strong-jaw"
+      )
         return {
           ...context,
           move: {
             ...context.move,
             power: Math.floor(context.move.power! * 1.5),
           },
-          notes: [...context.notes, "(strong-jaw) Boosts power of biting moves by 50%"],
+          notes: [
+            ...context.notes,
+            "(strong-jaw) Boosts power of biting moves by 50%",
+          ],
         };
       return context;
     },
@@ -1359,6 +1383,195 @@ export const abilityRules: AbilityRule[] = [
         user: applySurgeSurfer(context.user),
         target: applySurgeSurfer(context.target),
       };
+    },
+  },
+  {
+    ability: "swift-swim",
+    apply: (context) => {
+      const applySwiftSwim = (pokemon: Pokemon): Pokemon =>
+        pokemon.ability === "swift-swim" && context.weather === "rain"
+          ? {
+              ...pokemon,
+              stats: {
+                ...pokemon.stats,
+                Speed: Math.floor(pokemon.stats.Speed * 2),
+              },
+            }
+          : pokemon;
+
+      return {
+        ...context,
+        user: applySwiftSwim(context.user),
+        target: applySwiftSwim(context.target),
+      };
+    },
+  },
+  {
+    ability: "technician",
+    apply: (context) => {
+      if (
+        context.user.ability === "technician" &&
+        context.move.power &&
+        context.move.power <= 60
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power * 1.5),
+          },
+          notes: [
+            ...context.notes,
+            "(technician) Boosts power of moves with power <= 60 by 50%",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "tera-shell",
+    apply: (context) => {
+      if (context.target.ability === "tera-shell")
+        return {
+          ...context,
+          notes: [
+            ...context.notes,
+            "(tera-shell) If target is at full HP, move results in not very effective damage",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "tera-form-zero",
+    apply: (context) => {
+      if (
+        context.target.ability === "tera-form-zero" ||
+        context.user.ability === "tera-form-zero"
+      )
+        return { ...context, weather: "", terrain: "" };
+      return context;
+    },
+  },
+  {
+    ability: "thick-fat",
+    apply: (context) => {
+      if (
+        context.target.ability === "thick-fat" &&
+        (context.move.type === "fire" || context.move.type === "ice")
+      )
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 0.5),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 0.5),
+            },
+          },
+          notes: [
+            ...context.notes,
+            "(thick-fat) Reduces power of fire and ice moves by 50%",
+          ],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "tinted-lens",
+    apply: (context) => {
+      if (context.user.ability === "tinted-lens" && context.effectiveness < 1)
+        return {
+          ...context,
+          userAbilityModifier: 2,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "tough-claws",
+    apply: (context) => {
+      if (
+        context.user.ability === "tough-claws" &&
+        context.move.category === "physical"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor((context.move.power! * 5325) / 4096),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "toxic-boost",
+    apply: (context) => {
+      if (
+        context.user.ability === "toxic-boost" &&
+        context.user.status === "poison"
+      )
+        return {
+          ...context,
+          move: {
+            ...context.move,
+            power: Math.floor(context.move.power! * 1.5),
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "transistor",
+    apply: (context) => {
+      if (
+        context.user.ability === "transistor" &&
+        context.move.type === "electric"
+      )
+        return {
+          ...context,
+          user: {
+            ...context.user,
+            stats: {
+              ...context.user.stats,
+              Atk: Math.floor(context.user.stats.Atk * 1.5),
+              "Sp. Atk": Math.floor(context.user.stats["Sp. Atk"] * 1.5),
+            },
+          },
+        };
+      return context;
+    },
+  },
+  {
+    ability: "volt-absorb",
+    apply: (context) => {
+      if (
+        context.target.ability === "volt-absorb" &&
+        context.move.type === "electric"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "Opponent immune to electric type moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "water-absorb",
+    apply: (context) => {
+      if (
+        context.target.ability === "water-absorb" &&
+        context.move.type === "water"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "(water-absorb) Immune to water moves"],
+        };
+      return context;
     },
   },
 ];
