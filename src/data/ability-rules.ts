@@ -203,6 +203,26 @@ const strongJawBoosts: string[] = [
   "thunder-fang",
 ];
 
+const windMoves: string[] = [
+  "aeroblast",
+  "air-cutter",
+  "bleakwind-storm",
+  "blizzard",
+  "fairy-wind",
+  "gust",
+  "heat-wave",
+  "hurricane",
+  "icy-wind",
+  "petal-blizzard",
+  "sandsear-storm",
+  "sandstorm",
+  "springtide-storm",
+  "tailwind",
+  "twister",
+  "whirlwind",
+  "wildbolt-storm",
+];
+
 export const neutralizingGasCheck = (
   userAbility: string,
   targetAbility: string,
@@ -1570,6 +1590,75 @@ export const abilityRules: AbilityRule[] = [
           ...context,
           pureDamage: 0,
           notes: [...context.notes, "(water-absorb) Immune to water moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "water-bubble",
+    apply: (context) => {
+      let newContext = context;
+
+      if (
+        context.target.ability === "water-bubble" &&
+        context.move.type === "fire"
+      )
+        newContext = { ...newContext, targetAbilityModifier: 0.5 };
+
+      if (
+        context.user.ability === "water-bubble" &&
+        context.move.type === "water"
+      )
+        newContext = {
+          ...newContext,
+          move: { ...context.move, power: context.move.power! * 2 },
+        };
+      return newContext;
+    },
+  },
+  {
+    ability: "well-baked-body",
+    apply: (context) => {
+      if (
+        context.target.ability === "well-baked-body" &&
+        context.move.type === "fire"
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [...context.notes, "(well-baked-body) Immune to fire moves"],
+        };
+      return context;
+    },
+  },
+  {
+    ability: "wind-rider",
+    apply: (context) => {
+      if (
+        context.target.ability === "wind-rider" &&
+        windMoves.includes(context.move.name)
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+        };
+      return context;
+    },
+  },
+  {
+    ability: "wonder-guard",
+    apply: (context) => {
+      if (
+        context.target.ability === "wonder-guard" &&
+        context.effectiveness <= 1
+      )
+        return {
+          ...context,
+          pureDamage: 0,
+          notes: [
+            ...context.notes,
+            "(wonder-guard) Immune to super-effective moves",
+          ],
         };
       return context;
     },
