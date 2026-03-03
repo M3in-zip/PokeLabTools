@@ -113,6 +113,28 @@ export const PokemonBuild = ({
           type={pokemonInfo.type}
         />
       )}
+      {/* ITEM */}
+      {data && (
+              <div className="flex flex-row items-center gap-2 p-2">
+                <span className="font-semibold whitespace-nowrap">ITEM : </span>
+                <DropDown
+                  value={pokemonInfo.item ?? "--"}
+                  onSelect={(val) => setPokemonInfo((curr)=> {return {...curr, item:(val as string)}})}
+                  dataSource={[
+                    {value: "--", item: <span className="font-semibold">--</span>},
+                    {value: "assault-vest", item: <span className="font-semibold">Assault Vest</span>},
+                    {value: "black-belt", item: <span className="font-semibold">Black Belt</span>},
+                    {value: "black-glasses", item: <span className="font-semibold">Black Glasses</span>},
+                    {value: "choice-band", item: <span className="font-semibold">Choice Band</span>},
+                    {value: "choice-scarf", item: <span className="font-semibold">Choice Scarf</span>},
+                    {value: "choice-specs", item: <span className="font-semibold">Choice Specs</span>},
+                    {value: "life-orb", item: <span className="font-semibold">Life Orb</span>},
+                  ]}
+                />
+              </div>
+      )
+      }
+      {/* ABILITY */}
       {data && (
               <div className="flex flex-row items-center gap-2 px-2">
                 <span className="font-semibold whitespace-nowrap">ABILITY : </span>

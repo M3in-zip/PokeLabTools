@@ -17,6 +17,7 @@ export interface Pokemon {
   weight: number;
   ability: string;
   status?: "burn" | "freeze" | "paralysis" | "poison" | "sleep" | undefined;
+  item?: string;
 }
 
 export interface PokemonMove {
