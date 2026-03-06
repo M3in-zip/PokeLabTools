@@ -1,7 +1,6 @@
-import { usePokemonStore } from "@/stores/pokemonStore";
+import { usePokemonStore, type pokemonNature } from "@stores/pokemonStore";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { DropDown } from "../drop-down";
-import type { pokemonNature } from "@/stores/pokemonStore";
 import type { Stats, Stat } from "@/types/pokemon";
 
 const STAT_NAMES = ["HP", "Atk", "Def", "Sp. Atk", "Sp. Def", "Speed"] as const;

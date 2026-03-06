@@ -111,7 +111,7 @@ export const DropDown = ({
             dataSource.map((item, index) => (
               <li
                 key={item.value}
-                className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-200" : "hover:bg-blue-200"}`}
+                className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-300" : "hover:bg-blue-300"}`}
                 onMouseDown={() => {
                   onSelect(item.value);
                   setIsFocused(false);

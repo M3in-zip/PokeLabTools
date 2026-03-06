@@ -8,6 +8,7 @@ import { PokemonMoveSearch } from "../pokemon-move-search";
 import { useThemeStore } from "@stores/theme-store";
 import type { Stats, Pokemon } from "@/types/pokemon";
 import { DropDown } from "@components/drop-down";
+import { Combobox } from "@components/combobox";
 
 interface PokemonBuildProps {
   pokemon?: string;
@@ -115,10 +116,9 @@ export const PokemonBuild = ({
       )}
       {/* ITEM */}
       {data && (
-              <div className="flex flex-row items-center gap-2 p-2">
+              <div className="flex flex-row items-center gap-2 px-2">
                 <span className="font-semibold whitespace-nowrap">ITEM : </span>
-                <DropDown
-                  value={pokemonInfo.item ?? "--"}
+                <Combobox
                   onSelect={(val) => setPokemonInfo((curr)=> {return {...curr, item:(val as string)}})}
                   dataSource={[
                     {value: "--", item: <span className="font-semibold">--</span>},
