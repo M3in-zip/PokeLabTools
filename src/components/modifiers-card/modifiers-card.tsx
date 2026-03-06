@@ -12,13 +12,13 @@ export const ModifiersCard = ({
 }: ModifiersCardProps) => {
   const theme = useThemeStore((state) => state.theme);
 
-  const leftButtonClasses = "p-2 border-white border-2 border-r-1 rounded-l-lg";
-  const rightButtonClasses = "p-2 border-white border-2 border-l-1 rounded-r-lg";
-  const middleButtonClasses = "p-2 border-white border-2 border-l-1 border-r-1";
+  const leftButtonClasses = "p-1 border-white border-2 border-r-1 rounded-l-lg";
+  const rightButtonClasses = "p-1 border-white border-2 border-l-1 rounded-r-lg";
+  const middleButtonClasses = "p-1 border-white border-2 border-l-1 border-r-1";
   const baseText = theme === "dark" ? "text-white" : "text-black";
 
-  const buttonCustom = (className: string, name: string, modifier: keyof Modifiers, notNullable?:boolean) => {
-    var active = (modifiers[modifier] === name);
+  const buttonCustom = (className: string, value: string, modifier: keyof Modifiers, notNullable?:boolean) => {
+    var active = (modifiers[modifier] === value);
     const bgClass =
     theme === "dark"
       ? active
@@ -32,21 +32,27 @@ export const ModifiersCard = ({
         type="button"
         className={`${className} ${baseText} ${bgClass} text-xs`}
         onClick={() => {
-          setModifiers({ ...modifiers, [modifier]: notNullable? name : active? "" : name });
+          setModifiers({ ...modifiers, [modifier]: notNullable? value : active? "" : value });
         }}
       >
-        {name.toUpperCase()}
+        {value.toUpperCase()}
       </button>
     )
   };
 
   return (
     <div className="flex flex-col items-center">
-      <span className="font-semibold text-white">Field</span>
+      <span className="font-semibold text-white">Level</span>
+      <div className="flex flex-row items-center, justify-content p-2">
+        {buttonCustom(leftButtonClasses, "50", "level", true)}
+        {buttonCustom(rightButtonClasses, "100", "level", true)}
+      </div>
+      <span className="font-semibold text-white">Battle</span>
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "single", "battle", true)}
         {buttonCustom(rightButtonClasses, "double", "battle", true)}
       </div>
+      <span className="font-semibold text-white">Field</span>
       <div className="flex flex-row items-center, justify-content p-2">
         {buttonCustom(leftButtonClasses, "sun", "weather")}
         {buttonCustom(middleButtonClasses, "rain", "weather")}

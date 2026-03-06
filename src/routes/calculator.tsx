@@ -35,6 +35,7 @@ function PokemonCalculator() {
     moves.find((m) => m.name === "precipice-blades") as PokemonMove,
   );
   const [modifiers, setModifiers] = useState<Modifiers>({
+    level: "50",
     battle: "double",
     weather: "sun",
     terrain: "grassy",
@@ -77,7 +78,7 @@ function PokemonCalculator() {
   if (errorPokemonList)
     return <div className="p-2">Errore nel caricamento</div>;
 
-  const handlePokemonDataChange = (pokemonData: Pokemon, move:string) => {
+  const handlePokemonDataChange = (pokemonData: Pokemon, move: string) => {
     const movePokemon1 = moves.find((m) => m.name === move) as PokemonMove;
     if (movePokemon1) {
       setDataPokemon1(pokemonData);
@@ -85,7 +86,7 @@ function PokemonCalculator() {
     } else console.log("Move not found: ", move);
   };
 
-  const handlePokemon2DataChange = (pokemonData: Pokemon, move:string) => {
+  const handlePokemon2DataChange = (pokemonData: Pokemon, move: string) => {
     const movePokemon2 = moves.find((m) => m.name === move) as PokemonMove;
     if (movePokemon2) {
       setDataPokemon2(pokemonData);
@@ -97,6 +98,7 @@ function PokemonCalculator() {
     <div className="relative p-2 w-full flex flex-row gap-2">
       <div className="">
         <PokemonBuild
+          level={Number(modifiers.level)}
           pokemon="kyogre"
           setPokemonData={handlePokemonDataChange}
         />
@@ -104,6 +106,7 @@ function PokemonCalculator() {
       <ModifiersCard modifiers={modifiers} setModifiers={setModifiers} />
       <div className="">
         <PokemonBuild
+          level={Number(modifiers.level)}
           pokemon="groudon"
           setPokemonData={handlePokemon2DataChange}
         />

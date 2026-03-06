@@ -11,11 +11,13 @@ import { DropDown } from "@components/drop-down";
 import { Combobox } from "@components/combobox";
 
 interface PokemonBuildProps {
+  level: number;
   pokemon?: string;
   setPokemonData: (pokemonData: Pokemon, move: string) => void;
 }
 
 export const PokemonBuild = ({
+  level,
   setPokemonData,
   pokemon,
 }: PokemonBuildProps) => {
@@ -152,7 +154,7 @@ export const PokemonBuild = ({
       )
       }
       {data && (
-        <PokemonStats baseStats={baseStats} onChange={handleStatsChange} />
+        <PokemonStats level={level} baseStats={baseStats} onChange={handleStatsChange} />
       )}
       {data && pokemonMoves.length > 0 && (
         <PokemonMoveSearch

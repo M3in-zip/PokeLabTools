@@ -22,11 +22,12 @@ export const STAT_STAGE_MODIFIERS: Record<number, number> = {
 } as const;
 
 interface IVEVProps {
+  level: number;
   baseStats: Stats;
   onChange: (stats: Stats) => void;
 }
 
-export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
+export const PokemonStats = ({ level, baseStats, onChange }: IVEVProps) => {
   const [selectedNature, setSelectedNature] = useState<string>("--");
 
   const createStatObject = <T,>(initialValue: T) => {
@@ -45,7 +46,6 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
   const [EVs, setEVs] = useState<Record<Stat, IvEvValue>>(
     createStatObject<IvEvValue>(0),
   );
-  const [level, setLevel] = useState<string | number>(50);
   const [statChanges, setStatChanges] = useState<Record<Stat, string | number>>(
     createStatObject<string | number>(0),
   );
@@ -184,19 +184,6 @@ export const PokemonStats = ({ baseStats, onChange }: IVEVProps) => {
 
   return (
     <div className="p-2">
-      {/* level */}
-      <div className="flex flex-row items-center gap-2 mb-2">
-        <span className="font-semibold whitespace-nowrap">LEVEL : </span>
-        <DropDown
-          onSelect={setLevel}
-          value={level}
-          dataSource={[
-            { value: 50, item: <span>50</span> },
-            { value: 100, item: <span>100</span> },
-          ]}
-        />
-      </div>
-
       {/* nature */}
       <div className="flex flex-row items-center gap-2 mb-2">
         <span className="font-semibold whitespace-nowrap">NATURE : </span>

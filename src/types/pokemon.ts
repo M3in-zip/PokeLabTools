@@ -35,6 +35,7 @@ export interface PokemonMove {
 }
 
 export interface Modifiers {
+  level: "50" | "100";
   battle: "single" | "double"
   weather: "sun" | "rain" | "sand" | "snow" | "",
   terrain: "electric" | "grassy" | "psychic" | "misty" | "",
