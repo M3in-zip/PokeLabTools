@@ -101,6 +101,10 @@ export const PokemonBuild = ({
     setPokemonInfo((curr) => ({ ...curr, stats: newStats }));
   };
 
+  const itemObject = (name:string) => {
+    return {value:name.toLowerCase(), item:<span className="font-semibold">{name.charAt(0).toUpperCase() + name.slice(1)}</span>}
+  }
+
   return (
     <div
       className={`relative w-full min-w-[240px] h-full text-xs ${theme === "dark" ? "text-white" : "text-black"}`}
@@ -124,13 +128,15 @@ export const PokemonBuild = ({
                   onSelect={(val) => setPokemonInfo((curr)=> {return {...curr, item:(val as string)}})}
                   dataSource={[
                     {value: "--", item: <span className="font-semibold">--</span>},
-                    {value: "assault-vest", item: <span className="font-semibold">Assault Vest</span>},
-                    {value: "black-belt", item: <span className="font-semibold">Black Belt</span>},
-                    {value: "black-glasses", item: <span className="font-semibold">Black Glasses</span>},
-                    {value: "choice-band", item: <span className="font-semibold">Choice Band</span>},
-                    {value: "choice-scarf", item: <span className="font-semibold">Choice Scarf</span>},
-                    {value: "choice-specs", item: <span className="font-semibold">Choice Specs</span>},
-                    {value: "life-orb", item: <span className="font-semibold">Life Orb</span>},
+                    itemObject("assault-vest"),
+                    itemObject("black-belt"),
+                    itemObject("black-glasses"),
+                    itemObject("charcoal"),
+                    itemObject("choice-band"),
+                    itemObject("choice-scarf"),
+                    itemObject("choice-specs"),
+                    itemObject("life-orb"),
+                    itemObject("dragon-fang"),
                   ]}
                 />
               </div>

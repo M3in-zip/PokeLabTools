@@ -82,7 +82,7 @@ export const PokemonSearchInput = ({
             displayList.map((pokemon, index) => (
               <li
                 key={pokemon.id}
-                className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-200" : "hover:bg-blue-200"}`}
+                className={`px-4 py-3 cursor-pointer flex items-center border-b border-slate-50 last:border-none transition-colors ${index === selectedIndex ? "bg-blue-300" : "hover:bg-blue-300"}`}
                 onMouseDown={() => {
                   setSearch(pokemon.name);
                   if (onClick) onClick(pokemon.name);
