@@ -12,6 +12,7 @@ export interface pokemonNature {
 }
 
 interface PokemonStore {
+  itemList: string[];
   pokemonList: PokemonBase[];
   setPokemonList: (list: PokemonBase[]) => void;
   natureList: pokemonNature[];
@@ -19,9 +20,58 @@ interface PokemonStore {
 }
 
 export const usePokemonStore = create<PokemonStore>((set, get) => {
+  const itemList: string[] = [
+    "adamant-orb",
+    "assault-vest",
+    "black-belt",
+    "black-glasses",
+    "charcoal",
+    "choice-band",
+    "choice-scarf",
+    "choice-specs",
+    "draco-plate",
+    "dragon-fang",
+    "dread-plate",
+    "earth-plate",
+    "eviolite",
+    "expert-belt",
+    "fist-plate",
+    "flame-plate",
+    "grigeous-orb",
+    "icicle-plate",
+    "insect-plate",
+    "iron-ball",
+    "iron-plate",
+    "life-orb",
+    "lustrous-orb",
+    "magnet",
+    "meadow-plate",
+    "metal-coat",
+    "mind-plate",
+    "miracle-seed",
+    "mystic-water",
+    "never-melt-ice",
+    "odd-incense",
+    "pixie-plate",
+    "poison-barb",
+    "sharp-beak",
+    "silk-scarf",
+    "sky-plate",
+    "soft-sand",
+    "spell-tag",
+    "splash-plate",
+    "spooky-plate",
+    "stone-plate",
+    "thick-club",
+    "toxic-plate",
+    "twisted-spoon",
+    "waves-incense",
+    "wise-glasses",
+    "zap-plate",
+  ];
   const natureList: pokemonNature[] = [
     { name: "Adamant", increasedStat: "Atk", decreasedStat: "Sp. Atk" },
-    { name:"Bashful" },
+    { name: "Bashful" },
     { name: "Bold", increasedStat: "Def", decreasedStat: "Atk" },
     { name: "Brave", increasedStat: "Atk", decreasedStat: "Speed" },
     { name: "Calm", increasedStat: "Sp. Def", decreasedStat: "Atk" },
@@ -46,12 +96,13 @@ export const usePokemonStore = create<PokemonStore>((set, get) => {
     { name: "Serious" },
     { name: "Timid", increasedStat: "Speed", decreasedStat: "Atk" },
   ];
-  const nonNeutralNatures = natureList.filter(n => n.increasedStat);
-  
-  return({
-  pokemonList: [],
-  setPokemonList: (list) => set({ pokemonList: list }),
-  natureList: natureList,
-  getNonNeutralNatures: () => nonNeutralNatures,
-})}
-);
+  const nonNeutralNatures = natureList.filter((n) => n.increasedStat);
+
+  return {
+    pokemonList: [],
+    setPokemonList: (list) => set({ pokemonList: list }),
+    itemList: itemList,
+    natureList: natureList,
+    getNonNeutralNatures: () => nonNeutralNatures,
+  };
+});

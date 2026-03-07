@@ -9,6 +9,7 @@ import { useThemeStore } from "@stores/theme-store";
 import type { Stats, Pokemon } from "@/types/pokemon";
 import { DropDown } from "@components/drop-down";
 import { Combobox } from "@components/combobox";
+import { usePokemonStore } from "@stores/pokemonStore";
 
 interface PokemonBuildProps {
   level: number;
@@ -21,56 +22,6 @@ interface itemData {
   item: React.ReactNode;
 }
 
-const itemList: string[] = [
-  "adamant-orb",
-  "assault-vest",
-  "black-belt",
-  "black-glasses",
-  "charcoal",
-  "choice-band",
-  "choice-scarf",
-  "choice-specs",
-  "draco-plate",
-  "dragon-fang",
-  "dread-plate",
-  "earth-plate",
-  "eviolite",
-  "expert-belt",
-  "fist-plate",
-  "flame-plate",
-  "grigeous-orb",
-  "icicle-plate",
-  "insect-plate",
-  "iron-ball",
-  "iron-plate",
-  "life-orb",
-  "lustrous-orb",
-  "magnet",
-  "meadow-plate",
-  "metal-coat",
-  "mind-plate",
-  "miracle-seed",
-  "mystic-water",
-  "never-melt-ice",
-  "odd-incense",
-  "pixie-plate",
-  "poison-barb",
-  "sharp-beak",
-  "silk-scarf",
-  "sky-plate",
-  "soft-sand",
-  "spell-tag",
-  "splash-plate",
-  "spooky-plate",
-  "stone-plate",
-  "thick-club",
-  "toxic-plate",
-  "twisted-spoon",
-  "waves-incense",
-  "wise-glasses",
-  "zap-plate",
-];
-
 export const PokemonBuild = ({
   level,
   setPokemonData,
@@ -79,6 +30,7 @@ export const PokemonBuild = ({
 
   /* STATE */
   const theme = useThemeStore((state) => state.theme);
+  const itemList = usePokemonStore((state) => state.itemList);
   const [selectedPokemon, setSelectedPokemon] = useState<string>(pokemon || "rayquaza");
   const [baseStats, setBaseStats] = useState<Stats>({
     HP: 105,
