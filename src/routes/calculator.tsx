@@ -6,7 +6,7 @@ import { usePokemonStore } from "@/stores/pokemonStore";
 import { PokemonBuild } from "@/components/pokemon-build";
 import { ModifiersCard } from "@/components/modifiers-card";
 import moves from "@/data/moves.json";
-import type { PokemonMove, Pokemon, Modifiers } from "@/types/pokemon";
+import type { PokemonMove, Pokemon, Modifiers, Context } from "@/types/pokemon";
 
 export const Route = createFileRoute("/calculator")({
   component: PokemonCalculator,
@@ -41,7 +41,7 @@ function PokemonCalculator() {
     terrain: "grassy",
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(
       "Pokemon 1 data changed: ",
       dataPokemon1,
@@ -52,7 +52,14 @@ function PokemonCalculator() {
       "\nmove2: ",
       move2,
     );
-  }, [dataPokemon1, dataPokemon2, move1, move2]);
+  }, [dataPokemon1, dataPokemon2, move1, move2]); */
+
+  useEffect(() => {
+    console.log(
+      "Modifiers changed: ",
+      modifiers,
+    );
+  }, [modifiers]);
 
   const {
     data: pokemonList,

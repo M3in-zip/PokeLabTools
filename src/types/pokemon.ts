@@ -39,6 +39,7 @@ export interface Modifiers {
   battle: "single" | "double"
   weather: "sun" | "rain" | "sand" | "snow" | "",
   terrain: "electric" | "grassy" | "psychic" | "misty" | "",
+  "neutralizing-gas"?: boolean;
 }
 
 /* All you need to calc damage */
