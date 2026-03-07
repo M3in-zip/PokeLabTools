@@ -16,6 +16,61 @@ interface PokemonBuildProps {
   setPokemonData: (pokemonData: Pokemon, move: string) => void;
 }
 
+interface itemData {
+  value: string;
+  item: React.ReactNode;
+}
+
+const itemList: string[] = [
+  "adamant-orb",
+  "assault-vest",
+  "black-belt",
+  "black-glasses",
+  "charcoal",
+  "choice-band",
+  "choice-scarf",
+  "choice-specs",
+  "draco-plate",
+  "dragon-fang",
+  "dread-plate",
+  "earth-plate",
+  "eviolite",
+  "expert-belt",
+  "fist-plate",
+  "flame-plate",
+  "grigeous-orb",
+  "icicle-plate",
+  "insect-plate",
+  "iron-ball",
+  "iron-plate",
+  "life-orb",
+  "lustrous-orb",
+  "magnet",
+  "meadow-plate",
+  "metal-coat",
+  "mind-plate",
+  "miracle-seed",
+  "mystic-water",
+  "never-melt-ice",
+  "odd-incense",
+  "pixie-plate",
+  "poison-barb",
+  "sharp-beak",
+  "silk-scarf",
+  "sky-plate",
+  "soft-sand",
+  "spell-tag",
+  "splash-plate",
+  "spooky-plate",
+  "stone-plate",
+  "thick-club",
+  "toxic-plate",
+  "twisted-spoon",
+  "waves-incense",
+  "wise-glasses",
+  "zap-plate",
+];
+
 export const PokemonBuild = ({
   level,
   setPokemonData,
@@ -101,7 +156,7 @@ export const PokemonBuild = ({
     setPokemonInfo((curr) => ({ ...curr, stats: newStats }));
   };
 
-  const itemObject = (name:string) => {
+  const itemObject = (name:string):itemData => {
     return {value:name.toLowerCase(), item:<span className="font-semibold">{name.charAt(0).toUpperCase() + name.slice(1)}</span>}
   }
 
@@ -128,15 +183,7 @@ export const PokemonBuild = ({
                   onSelect={(val) => setPokemonInfo((curr)=> {return {...curr, item:(val as string)}})}
                   dataSource={[
                     {value: "--", item: <span className="font-semibold">--</span>},
-                    itemObject("assault-vest"),
-                    itemObject("black-belt"),
-                    itemObject("black-glasses"),
-                    itemObject("charcoal"),
-                    itemObject("choice-band"),
-                    itemObject("choice-scarf"),
-                    itemObject("choice-specs"),
-                    itemObject("life-orb"),
-                    itemObject("dragon-fang"),
+                    ...itemList.map((item) => itemObject(item)),
                   ]}
                 />
               </div>
