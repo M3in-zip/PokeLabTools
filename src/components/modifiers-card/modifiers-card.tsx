@@ -50,7 +50,7 @@ export const ModifiersCard = ({
     );
   };
 
-  const checkBoxButton = (field:keyof Modifiers) => {
+  const checkBoxButton = (field:keyof Modifiers, onClick?:()=>void) => {
     const active = modifiers[field] === true;
     const bgClass =
       theme === "dark"
@@ -64,7 +64,26 @@ export const ModifiersCard = ({
       <button
         type="button"
         className={`${buttonBaseClasses} text-white ${bgClass}`}
-        onClick={() => setModifiers({...modifiers, [field]: modifiers[field] ? !modifiers[field] : true})}
+        onClick={onClick ? onClick : () => setModifiers({ ...modifiers, [field]: modifiers[field] ? !modifiers[field] : true })}
+      >{field.toUpperCase()}</button>
+    )
+  }
+
+  const checkBoxButtonCouple = (field:keyof Modifiers, checked:boolean, onClick?:()=>void) => {
+    const active = checked;
+    const bgClass =
+      theme === "dark"
+        ? active
+          ? "bg-slate-800"
+          : "bg-slate-500"
+        : active
+          ? "bg-slate-300"
+          : "bg-white";
+    return (
+      <button
+        type="button"
+        className={`${buttonBaseClasses} text-white ${bgClass}`}
+        onClick={onClick ? onClick : () => setModifiers({ ...modifiers, [field]: modifiers[field] ? !modifiers[field] : true })}
       >{field.toUpperCase()}</button>
     )
   }
@@ -75,7 +94,7 @@ export const ModifiersCard = ({
         {/* Battle */}
         <div className="flex flex-col items-center">
           <span className="font-semibold text-white">Battle</span>
-          <div className="flex flex-row items-center, justify-content p-2">
+          <div className="flex flex-row items-center justify-content p-2">
             {buttonCustom(leftButtonClasses, "single", "battle", true)}
             {buttonCustom(rightButtonClasses, "double", "battle", true)}
           </div>
@@ -83,20 +102,20 @@ export const ModifiersCard = ({
         {/* Level */}
         <div className="flex flex-col items-center">
           <span className="font-semibold text-white">Level</span>
-          <div className="flex flex-row items-center, justify-content p-2">
+          <div className="flex flex-row items-center justify-content p-2">
             {buttonCustom(leftButtonClasses, "50", "level", true)}
             {buttonCustom(rightButtonClasses, "100", "level", true)}
           </div>
         </div>
       </div>
       <span className="font-semibold text-white">Field</span>
-      <div className="flex flex-row items-center, justify-content p-2">
+      <div className="flex flex-row items-center justify-content p-2">
         {buttonCustom(leftButtonClasses, "sun", "weather")}
         {buttonCustom(middleButtonClasses, "rain", "weather")}
         {buttonCustom(middleButtonClasses, "sand", "weather")}
         {buttonCustom(rightButtonClasses, "snow", "weather")}
       </div>
-      <div className="flex flex-row items-center, justify-content p-2">
+      <div className="flex flex-row items-center justify-content p-2">
         {buttonCustom(leftButtonClasses, "grassy", "terrain")}
         {buttonCustom(middleButtonClasses, "misty", "terrain")}
         {buttonCustom(middleButtonClasses, "electric", "terrain")}
@@ -104,7 +123,9 @@ export const ModifiersCard = ({
       </div>
       <span className="font-semibold text-white">Abilities</span>
       {checkBoxButton("neutralizing-gas")}
-      <div className="flex flex-row items-center, justify-content p-2">
+      <div className="flex flex-row w-full items-center justify-content p-2 justify-between">
+        {checkBoxButtonCouple("aurora-veil", modifiers["aurora-veil"][0], () => setModifiers({...modifiers, "aurora-veil": [(!modifiers["aurora-veil"][0]), modifiers["aurora-veil"][1]] }))}
+        {checkBoxButtonCouple("aurora-veil", modifiers["aurora-veil"][1], () => setModifiers({...modifiers, "aurora-veil": [(modifiers["aurora-veil"][0]), !modifiers["aurora-veil"][1]] }))}
       </div>
     </div>
   );

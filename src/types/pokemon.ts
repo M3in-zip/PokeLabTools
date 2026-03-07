@@ -40,6 +40,11 @@ export interface Modifiers {
   weather: "sun" | "rain" | "sand" | "snow" | "",
   terrain: "electric" | "grassy" | "psychic" | "misty" | "",
   "neutralizing-gas"?: boolean;
+  "air-lock"?: boolean;
+  "dark-aura"?: boolean;
+  "fairy-aura"?: boolean;
+  "aura-break"?: boolean;
+  "aurora-veil": [boolean, boolean]; /* [user, target] */
 }
 
 /* All you need to calc damage */

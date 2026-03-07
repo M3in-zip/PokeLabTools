@@ -39,6 +39,7 @@ function PokemonCalculator() {
     battle: "double",
     weather: "sun",
     terrain: "grassy",
+    "aurora-veil": [false, false],
   });
 
   /* useEffect(() => {
