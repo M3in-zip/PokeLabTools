@@ -5,6 +5,22 @@ export interface AbilityRule {
   apply: (context: Context) => Context;
 }
 
+/* 
+TODO add flags and remove all arrays
+interface Move {
+  name: string
+  type: string
+  power?: number
+  category: "physical" | "special"
+  flags?: {
+    contact?: boolean
+    sound?: boolean
+    punch?: boolean
+    bite?: boolean
+    wind?: boolean
+  }
+} */
+
 const bulletproofIgnores: string[] = [
   "acid-spray",
   "aura-sphere",
@@ -152,7 +168,7 @@ const moldBreakerIgnores: string[] = [
   "Wonder-Skin",
 ];
 
-const punkRockAffects: string[] = [
+const soundMoves: string[] = [
   "boomburst",
   "hyper-voice",
   "overdrive",
@@ -190,7 +206,7 @@ const sharpnessBoosts: string[] = [
   "x-scissor",
 ];
 
-const strongJawBoosts: string[] = [
+const biteMoves: string[] = [
   "bite",
   "crunch",
   "fire-fang",
@@ -755,7 +771,7 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "ice-scales",
     apply: (context) => {
-      if (context.target.ability === "ice-scales")
+      if (context.target.ability === "ice-scales" && context.move.category === "special")
         return {
           ...context,
           targetAbilityModifier: 0.5,
@@ -932,7 +948,7 @@ export const abilityRules: AbilityRule[] = [
     apply: (context) => {
       if (
         context.user.ability === "minds-eye" &&
-        context.user.type.includes("ghost") &&
+        context.target.type.includes("ghost") &&
         (context.move.type === "normal" || context.move.type === "fighting")
       )
         return { ...context, effectiveness: 1 };
@@ -984,7 +1000,7 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "parental-bond",
     apply: (context) => {
-      if (context.user.ability === "parental-bond" && context.effectiveness > 1)
+      if (context.user.ability === "parental-bond")
         return { ...context, userAbilityModifier: 1.25 };
       return context;
     },
@@ -1003,7 +1019,7 @@ export const abilityRules: AbilityRule[] = [
   {
     ability: "punk-rock",
     apply: (context) => {
-      const isSoundMove = punkRockAffects.includes(context.move.name);
+      const isSoundMove = soundMoves.includes(context.move.name);
       if (!isSoundMove) return context;
 
       const userHasPunkRock = context.user.ability === "punk-rock";
@@ -1192,7 +1208,7 @@ export const abilityRules: AbilityRule[] = [
     },
   },
   {
-    ability: "screeen-cleaner",
+    ability: "screen-cleaner",
     apply: (context) => {
       if (context.user.ability === "screen-cleaner")
         return {
@@ -1318,7 +1334,7 @@ export const abilityRules: AbilityRule[] = [
     apply: (context) => {
       if (
         context.target.ability === "soundproof" &&
-        punkRockAffects.includes(context.move.name)
+        soundMoves.includes(context.move.name)
       )
         return {
           ...context,
@@ -1367,7 +1383,7 @@ export const abilityRules: AbilityRule[] = [
     ability: "strong-jaw",
     apply: (context) => {
       if (
-        strongJawBoosts.includes(context.move.name) &&
+        biteMoves.includes(context.move.name) &&
         context.user.ability === "strong-jaw"
       )
         return {
