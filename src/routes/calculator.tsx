@@ -40,6 +40,8 @@ function PokemonCalculator() {
     weather: "sun",
     terrain: "grassy",
     "aurora-veil": [false, false],
+    reflect: [false, false],
+    "light-screen": [false, false],
   });
 
   /* useEffect(() => {
@@ -56,10 +58,7 @@ function PokemonCalculator() {
   }, [dataPokemon1, dataPokemon2, move1, move2]); */
 
   useEffect(() => {
-    console.log(
-      "Modifiers changed: ",
-      modifiers,
-    );
+    console.log("Modifiers changed: ", modifiers);
   }, [modifiers]);
 
   const {

@@ -45,6 +45,8 @@ export interface Modifiers {
   "fairy-aura"?: boolean;
   "aura-break"?: boolean;
   "aurora-veil": [boolean, boolean]; /* [user, target] */
+  reflect: [boolean, boolean]; /* [user, target] */
+  "light-screen": [boolean, boolean]; /* [user, target] */
 }
 
 /* All you need to calc damage */

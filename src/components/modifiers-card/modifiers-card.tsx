@@ -123,9 +123,24 @@ export const ModifiersCard = ({
       </div>
       <span className="font-semibold text-white">Abilities</span>
       {checkBoxButton("neutralizing-gas")}
-      <div className="flex flex-row w-full items-center justify-content p-2 justify-between">
+      <div className="flex flex-row items-center justify-content p-2">
+        {checkBoxButton("dark-aura")}
+        {checkBoxButton("fairy-aura")}
+        {checkBoxButton("aura-break")}
+      </div>
+      {checkBoxButton("air-lock")}
+      <span className="font-semibold text-white">Other</span>
+      <div className="flex flex-row w-full items-center justify-content p-1 justify-between">
         {checkBoxButtonCouple("aurora-veil", modifiers["aurora-veil"][0], () => setModifiers({...modifiers, "aurora-veil": [(!modifiers["aurora-veil"][0]), modifiers["aurora-veil"][1]] }))}
         {checkBoxButtonCouple("aurora-veil", modifiers["aurora-veil"][1], () => setModifiers({...modifiers, "aurora-veil": [(modifiers["aurora-veil"][0]), !modifiers["aurora-veil"][1]] }))}
+      </div>
+      <div className="flex flex-row w-full items-center justify-content p-1 justify-between">
+        {checkBoxButtonCouple("light-screen", modifiers["light-screen"][0], () => setModifiers({...modifiers, "light-screen": [(!modifiers["light-screen"][0]), modifiers["light-screen"][1]] }))}
+        {checkBoxButtonCouple("light-screen", modifiers["light-screen"][1], () => setModifiers({...modifiers, "light-screen": [(modifiers["light-screen"][0]), !modifiers["light-screen"][1]] }))}
+      </div>
+      <div className="flex flex-row w-full items-center justify-content p-1 justify-between">
+        {checkBoxButtonCouple("reflect", modifiers["reflect"][0], () => setModifiers({...modifiers, "reflect": [(!modifiers["reflect"][0]), modifiers["reflect"][1]] }))}
+        {checkBoxButtonCouple("reflect", modifiers["reflect"][1], () => setModifiers({...modifiers, "reflect": [(modifiers["reflect"][0]), !modifiers["reflect"][1]] }))}
       </div>
     </div>
   );
